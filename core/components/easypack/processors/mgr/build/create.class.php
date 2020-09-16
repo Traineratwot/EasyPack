@@ -213,7 +213,9 @@
 				foreach ($_tmp as $settingId) {
 					if ($settingId) {
 						$settingVehicle = NULL;
+						/** @var modSystemSetting $setting */
 						$setting = $this->modx->getObject('modSystemSetting', ['key' => $settingId]);
+						$this->_settingLex($setting->toArray());
 					}
 				}
 			}

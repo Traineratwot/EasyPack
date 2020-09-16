@@ -29,18 +29,18 @@
 	$_lang['EasyPack.test']                     = 'Тестировать пакет';
 	$_lang['EasyPack.testing']                  = 'Результат тестирование [[+name]]';
 
-	$_lang['_js_mgr_']                          = 'создать папку <strong style="color: black;">/js/mgr </strong> в assets/components/[[+name]]/?';
-	$_lang['_controllers_mgr_']                 = 'создать папку <strong style="color: black;">/controllers/mgr </strong> в core/components/[[+name]]/?';
-	$_lang['_docs_']                            = 'создать папку <strong style="color: black;">/docs/ </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_chunks_']                 = 'создать папку <strong style="color: black;">/elements/chunks </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_plugins_']                = 'создать папку <strong style="color: black;">/elements/plugins </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_snippets_']               = 'создать папку <strong style="color: black;">/elements/snippets </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_templates_']              = 'создать папку <strong style="color: black;">/elements/templates </strong> в core/components/[[+name]]/?';
-	$_lang['_lexicon_en_']                      = 'создать папку <strong style="color: black;">/lexicon/en </strong> в assets/components/[[+name]]/?';
-	$_lang['_processors_']                      = 'создать папку <strong style="color: black;">/processors/</strong> в assets/components/[[+name]]/?';
-	$_lang['_model_']                           = 'создать xml схемы таблиц и их классы? (автоматически запускается при создании пакета)';
-	$_lang['_namespace_']                       = 'создать пространство имён для <strong style="color: black;">[[+name]]</strong>? (автоматически запускается при создании пакета)';
-	$_lang['_elements_']                        = 'Сохранить элементы(плагины,чанки,снипеты,...) в папку <strong style="color: black;">/elements/</strong> в assets/components/[[+name]]/? (автоматически запускается при создании пакета)';
+	$_lang['_js_mgr_']                          = 'Создать папку <strong style="color: black;">/js/mgr </strong> в assets/components/[[+name]]/?';
+	$_lang['_controllers_mgr_']                 = 'Создать папку <strong style="color: black;">/controllers/mgr </strong> в core/components/[[+name]]/?';
+	$_lang['_docs_']                            = 'Создать папку <strong style="color: black;">/docs/ </strong> в core/components/[[+name]]/?';
+	$_lang['_elements_chunks_']                 = 'Создать папку <strong style="color: black;">/elements/chunks </strong> в core/components/[[+name]]/?';
+	$_lang['_elements_plugins_']                = 'Создать папку <strong style="color: black;">/elements/plugins </strong> в core/components/[[+name]]/?';
+	$_lang['_elements_snippets_']               = 'Создать папку <strong style="color: black;">/elements/snippets </strong> в core/components/[[+name]]/?';
+	$_lang['_elements_templates_']              = 'Создать папку <strong style="color: black;">/elements/templates </strong> в core/components/[[+name]]/?';
+	$_lang['_lexicon_en_']                      = 'Создать папку <strong style="color: black;">/lexicon/en </strong> в assets/components/[[+name]]/?';
+	$_lang['_processors_']                      = 'Создать папку <strong style="color: black;">/processors/</strong> в assets/components/[[+name]]/?';
+	$_lang['_model_']                           = 'Создать xml схемы таблиц и их классы? (автоматически запускается при создании пакета)';
+	$_lang['_namespace_']                       = 'Создать пространство имён для <strong style="color: black;">[[+name]]</strong>? (автоматически запускается при создании пакета)';
+	$_lang['_elements_']                        = 'Сохранить элементы(плагины,чанки,снипеты,...) в папку <strong style="color: black;">/elements/</strong> в core/components/[[+name]]/? (автоматически запускается при создании пакета)';
 
 
 	$_lang['EasyPack.description.date']         = 'Время последнего обновления';
