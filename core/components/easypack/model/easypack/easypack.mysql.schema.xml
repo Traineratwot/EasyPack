@@ -1,0 +1,24 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<model package="easypack" baseClass="xPDOObject" platform="mysql" defaultEngine="MyISAM" version="1.1">
+	<object class="EasypackExtras" table="easypack_extras" extends="xPDOSimpleObject">
+		<field key="name" dbtype="text" phptype="string" null="true" />
+		<field key="version" dbtype="text" phptype="string" null="true" />
+		<field key="date" dbtype="datetime" phptype="datetime" null="true" />
+		<field key="chunks" dbtype="text" phptype="string" null="true" />
+		<field key="snippets" dbtype="text" phptype="string" null="true" />
+		<field key="plugins" dbtype="text" phptype="string" null="true" />
+		<field key="templates" dbtype="text" phptype="string" null="true" />
+		<field key="menus" dbtype="text" phptype="string" null="true" />
+		<field key="settings" dbtype="text" phptype="string" null="true" />
+		<field key="core" dbtype="text" phptype="string" null="true" />
+		<field key="assets" dbtype="text" phptype="string" null="true" />
+		<field key="requires" dbtype="text" phptype="string" null="true" />
+		<field key="readme" dbtype="text" phptype="string" null="true" />
+		<field key="changelog" dbtype="text" phptype="string" null="true" />
+		<field key="setup_option" dbtype="text" phptype="string" null="true" />
+		<field key="php_resolver" dbtype="text" phptype="string" null="true" />
+		<field key="license" dbtype="text" phptype="string" null="true" />
+		<field key="tables" dbtype="text" phptype="string" null="true" />
+		<field key="path_to_last_transport" dbtype="text" phptype="string" null="true" />
+	</object>
+</model>
