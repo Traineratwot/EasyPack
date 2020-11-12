@@ -30,9 +30,10 @@
 			}
 
 			foreach ($this->properties as $key => $prop) {
-				
+
 				if (is_array($prop)) {
-					if (count($prop) == 0) {
+					$prop = array_unique($prop);
+					if (count($prop) == 0 or empty($prop)) {
 						$this->setProperty($key, NULL);
 					} elseif (count($prop) == 1 and !$prop[0]) {
 						$this->setProperty($key, NULL);
@@ -59,7 +60,6 @@
 						}
 						break;
 				}
-
 			}
 
 			return !$this->hasErrors();

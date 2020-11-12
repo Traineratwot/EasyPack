@@ -24,9 +24,18 @@
 			$assets = $this->modx->getOption('assets_url');
 			$this->addJavascript('https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js');
 			$this->addJavascript($assets . 'components/easypack/js/mgr/jsonHighlighter.min.js');
-			$this->addJavascript($assets . 'components/easypack/js/mgr/main.tab.js?t='.time());
-			$this->addCss($assets . 'components/easypack/css/mgr/main.tab.css?t='.time());
-			$this->addCss('https://code.cdn.mozilla.net/fonts/fira.css');
-			$this->addHtml('<script type="text/javascript">var EasyPackConnector_url = "' . $assets . 'components/easypack/connector.php";</script>');
+			$this->addJavascript($assets . 'components/easypack/js/mgr/main.tab.js');
+			$this->addCss($assets . 'components/easypack/css/mgr/main.tab.css');
+			$modUtil = file_exists(MODX_CORE_PATH . 'components/modutilities');
+			$this->addHtml('
+			<script type="text/javascript">
+				var EasyPackConnector_url = "' . $assets . 'components/easypack/connector.php";
+				var modUtil = "'.$modUtil.'";
+				if(modUtil){
+					var modUtilConnector_url = "' . $assets . 'components/modutilities/connector.php";
+				}else{
+					var modUtilConnector_url = EasyPackConnector_url;
+				}
+			</script>');
 		}
 	}

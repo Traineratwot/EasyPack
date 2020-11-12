@@ -3,10 +3,18 @@
 	class EasypackExtras extends xPDOSimpleObject
 	{
 
+		public function set($k = NULL, $v = NULL, $vType = '')
+		{
+			if (is_array($v) or is_object($v)) {
+				$v = @json_encode($v, 256);
+			}
+			parent::set($k, $v, $vType);
+		}
+
 		public function getProperty($k, $default = NULL)
 		{
 			$value = $this->get($k);
-			return (!empty($value) and $value != NULL) ? $value : $default;
+			return (!empty($value) and !is_null($value)) ? $value : $default;
 		}
 
 		public function getSettings()
@@ -80,4 +88,68 @@
 			}
 			return [];
 		}
+
+		public function getResources()
+		{
+			$resources = $this->getProperty('resources');
+			if ($resources) {
+				$resources = @json_decode($resources, 1);
+				if ($resources and is_array($resources)) {
+					return $resources;
+				}
+			}
+			return [];
+		}
+
+		public function getRest()
+		{
+			$elem = $this->getProperty('modUtilitiesRest');
+			if ($elem) {
+				$elem = @json_decode($elem, 1);
+				if ($elem and is_array($elem)) {
+					return $elem;
+				}
+			}
+			return [];
+		}
+
+		public function getTables()
+		{
+			$elem = $this->getProperty('tables');
+			if ($elem) {
+				$elem = @json_decode($elem, 1);
+				if ($elem and is_array($elem)) {
+					return $elem;
+				}
+			}
+			return [];
+		}
+
+		public function getRequires()
+		{
+			$elem = $this->getProperty('requires');
+			if ($elem) {
+				$elem = @json_decode($elem, 1);
+				if ($elem and is_array($elem)) {
+					return $elem;
+				}
+			}
+			return [];
+		}
+
+		public function getRequiresExtras()
+		{
+			$elem = $this->getProperty('requires');
+			if ($elem) {
+				$elem = @json_decode($elem, 1);
+				if ($elem and is_array($elem)) {
+					if (isset($elem['extras'])) {
+						return $elem['extras'];
+					}
+				}
+			}
+			return [];
+		}
+
+
 	}

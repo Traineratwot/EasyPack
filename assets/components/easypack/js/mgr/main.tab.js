@@ -73,6 +73,16 @@ var elemTemplate4 = new Ext.XTemplate('<tpl for=".">\
 							<strong>{name_trans}</strong><small>({namespace})</small>\
 						</div>\
 					</tpl>', {compiled: true})
+var elemTemplate5 = new Ext.XTemplate('<tpl for=".">\
+						<div class="x-combo-list-item">\
+							<strong>{url}</strong><small>({snippet})</small>\
+						</div>\
+					</tpl>', {compiled: true})
+var elemTemplate6 = new Ext.XTemplate('<tpl for=".">\
+						<div class="x-combo-list-item">\
+							<strong>({id}) {pagetitle}</strong><small>({uri})</small>\
+						</div>\
+					</tpl>', {compiled: true})
 var htmlRenderer = function(val) {
 	return '<code> ' + escapeHtml(defaultRenderer(val)) + ' </code>'
 }
@@ -101,7 +111,220 @@ var todata = function(str, key = 'name') {
 //основной блок
 EasyPack.panel.Home = function(config) {
 	config = config || {}
-	Ext.apply(config, {
+	var columns = [ // Добавляем ширину и заголовок столбца
+		{
+			dataIndex: 'id',
+			width: 200,
+			header: _('id'),
+			sortable: true,
+			renderer: defaultRenderer
+		},
+		{
+			dataIndex: 'name',
+			width: 330,
+			header: _('name'),
+			sortable: true,
+			renderer: function(val, e, b) {
+				if(b.data.path_to_last_transport) {
+					return `<a href="${b.data.path_to_last_transport}" title="${_('EasyPack.path_to_last_transport')}">${val}</a>`
+				} else {
+					return `${val}`
+				}
+			},
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'version',
+			width: 200,
+			header: _('version'),
+			emptyText: '0.0.1-pl',
+			sortable: true,
+			tooltip: _('EasyPack.description.version'),
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+
+		{
+			dataIndex: 'date',
+			width: 330,
+			tooltip: _('EasyPack.description.date'),
+			header: _('date'),
+			sortable: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+
+		{
+			dataIndex: 'chunks',
+			width: 330,
+			header: _('chunks'),
+			tooltip: _('EasyPack.description.chunks'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'snippets',
+			width: 330,
+			header: _('snippets'),
+			tooltip: _('EasyPack.description.snippets'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'plugins',
+			width: 330,
+			header: _('plugins'),
+			tooltip: _('EasyPack.description.plugins'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'templates',
+			width: 330,
+			header: _('templates'),
+			tooltip: _('EasyPack.description.templates'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'resources',
+			width: 330,
+			header: _('resources'),
+			tooltip: _('EasyPack.description.resources'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'menus',
+			width: 330,
+			header: _('edit_menu'),
+			tooltip: _('EasyPack.description.menus'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'settings',
+			width: 330,
+			header: _('settings'),
+			tooltip: _('EasyPack.description.settings'),
+			sortable: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textfield'}
+		},
+
+		{
+			dataIndex: 'core',
+			width: 330,
+			header: _('EasyPack.core'),
+			tooltip: _('EasyPack.description.core'),
+			sortable: true,
+			renderer: defaultRenderer,
+			hidden: true,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'assets',
+			width: 330,
+			header: _('EasyPack.assets'),
+			tooltip: _('EasyPack.description.assets'),
+			sortable: true,
+			hidden: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+
+		{
+			dataIndex: 'requires',
+			width: 330,
+			header: _('EasyPack.requires'),
+			tooltip: _('EasyPack.description.requires'),
+			sortable: true,
+			hidden: false,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textarea'}
+		},
+		{
+			dataIndex: 'readme',
+			width: 330,
+			tooltip: _('EasyPack.description.readme'),
+			header: _('EasyPack.readme'),
+			sortable: true,
+			hidden: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'changelog',
+			width: 330,
+			tooltip: _('EasyPack.description.changelog'),
+			header: _('EasyPack.changelog'),
+			sortable: true,
+			hidden: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+
+		{
+			dataIndex: 'tables',
+			width: 330,
+			header: _('EasyPack.tables'),
+			tooltip: _('EasyPack.description.tables'),
+			sortable: true,
+			hidden: true,
+			renderer: JSONRenderer,
+			editor: {xtype: 'textarea'}
+		},
+
+		{
+			dataIndex: 'setup_option',
+			width: 330,
+			header: _('EasyPack.setup_option'),
+			tooltip: _('EasyPack.description.setup_option'),
+			sortable: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'php_resolver',
+			width: 330,
+			tooltip: _('EasyPack.description.php_resolver'),
+			header: _('EasyPack.php_resolver'),
+			sortable: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+		{
+			dataIndex: 'license',
+			width: 330,
+			tooltip: _('EasyPack.description.license'),
+			header: _('EasyPack.license'),
+			sortable: true,
+			hidden: true,
+			renderer: defaultRenderer,
+			editor: {xtype: 'textfield'}
+		},
+	]
+	if(modUtil) {
+		columns.push(
+			{
+				dataIndex: 'modUtilitiesRest',
+				width: 330,
+				tooltip: _('EasyPack.description.modUtilitiesRest'),
+				header: _('EasyPack.modUtilitiesRest'),
+				sortable: true,
+				hidden: true,
+				renderer: JSONRenderer,
+				editor: {xtype: 'textfield'}
+			}
+		)
+	}
+	var app = {
 		cls: 'container', // Добавляем отступы
 		items: [{
 			html: ' <h2>' + _('EasyPack') + ' <small style="font-size: 10px"><a href="https://forms.gle/E9hZht9RthdcX6Ur7" target="_blank">Bug report</a></small></h2>',
@@ -116,195 +339,7 @@ EasyPack.panel.Home = function(config) {
 						items: [{
 							id: 'EasyPack-main-table',
 							xtype: 'EasyPack-grid',
-							columns: [ // Добавляем ширину и заголовок столбца
-								{
-									dataIndex: 'id',
-									width: 200,
-									header: _('id'),
-									sortable: true,
-									renderer: defaultRenderer
-								},
-								{
-									dataIndex: 'name',
-									width: 330,
-									header: _('name'),
-									sortable: true,
-									renderer: function(val, e, b) {
-										if(b.data.path_to_last_transport) {
-											return `<a href="${b.data.path_to_last_transport}" title="${_('EasyPack.path_to_last_transport')}">${val}</a>`
-										} else {
-											return `${val}`
-										}
-									},
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'version',
-									width: 200,
-									header: _('version'),
-									sortable: true,
-									tooltip: _('EasyPack.description.version'),
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-
-								{
-									dataIndex: 'date',
-									width: 330,
-									tooltip: _('EasyPack.description.date'),
-									header: _('date'),
-									sortable: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-
-								{
-									dataIndex: 'chunks',
-									width: 330,
-									header: _('chunks'),
-									tooltip: _('EasyPack.description.chunks'),
-									sortable: true,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'snippets',
-									width: 330,
-									header: _('snippets'),
-									tooltip: _('EasyPack.description.snippets'),
-									sortable: true,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'plugins',
-									width: 330,
-									header: _('plugins'),
-									tooltip: _('EasyPack.description.plugins'),
-									sortable: true,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'templates',
-									width: 330,
-									header: _('templates'),
-									tooltip: _('EasyPack.description.templates'),
-									sortable: true,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'menus',
-									width: 330,
-									header: _('edit_menu'),
-									tooltip: _('EasyPack.description.menus'),
-									sortable: true,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'settings',
-									width: 330,
-									header: _('settings'),
-									tooltip: _('EasyPack.description.settings'),
-									sortable: true,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textfield'}
-								},
-
-								{
-									dataIndex: 'core',
-									width: 330,
-									header: _('EasyPack.core'),
-									tooltip: _('EasyPack.description.core'),
-									sortable: true,
-									renderer: defaultRenderer,
-									hidden: true,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'assets',
-									width: 330,
-									header: _('EasyPack.assets'),
-									tooltip: _('EasyPack.description.assets'),
-									sortable: true,
-									hidden: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-
-								{
-									dataIndex: 'requires',
-									width: 330,
-									header: _('EasyPack.requires'),
-									tooltip: _('EasyPack.description.requires'),
-									sortable: true,
-									hidden: false,
-									renderer: JSONRenderer,
-									editor: {xtype: 'textarea'}
-								},
-								{
-									dataIndex: 'readme',
-									width: 330,
-									tooltip: _('EasyPack.description.readme'),
-									header: _('EasyPack.readme'),
-									sortable: true,
-									hidden: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'changelog',
-									width: 330,
-									tooltip: _('EasyPack.description.changelog'),
-									header: _('EasyPack.changelog'),
-									sortable: true,
-									hidden: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-
-								{
-									dataIndex: 'tables',
-									width: 330,
-									header: _('EasyPack.tables'),
-									tooltip: _('EasyPack.description.tables'),
-									sortable: true,
-									hidden: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textarea'}
-								},
-
-								{
-									dataIndex: 'setup_option',
-									width: 330,
-									header: _('EasyPack.setup_option'),
-									tooltip: _('EasyPack.description.setup_option'),
-									sortable: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'php_resolver',
-									width: 330,
-									tooltip: _('EasyPack.description.php_resolver'),
-									header: _('EasyPack.php_resolver'),
-									sortable: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-								{
-									dataIndex: 'license',
-									width: 330,
-									tooltip: _('EasyPack.description.license'),
-									header: _('EasyPack.license'),
-									sortable: true,
-									hidden: true,
-									renderer: defaultRenderer,
-									editor: {xtype: 'textfield'}
-								},
-							],
+							columns: columns,
 							fields: [
 								'id',
 								'name',
@@ -314,6 +349,7 @@ EasyPack.panel.Home = function(config) {
 								'snippets',
 								'plugins',
 								'templates',
+								'resources',
 								'menus',
 								'settings',
 								'core',
@@ -326,6 +362,7 @@ EasyPack.panel.Home = function(config) {
 								'license',
 								'tables',
 								'path_to_last_transport',
+								'modUtilitiesRest',
 							],
 							tbar: [{
 								xtype: 'button', // Перемещаем сюда нашу кнопку
@@ -502,7 +539,9 @@ EasyPack.panel.Home = function(config) {
 				]
 			}
 		]
-	})
+	}
+
+	Ext.apply(config, app)
 	EasyPack.panel.Home.superclass.constructor.call(this, config) // Чёртова магия =)
 }
 
@@ -563,6 +602,7 @@ EasyPack.window.add = function(config) {
 		'snippets': null,
 		'plugins': null,
 		'templates': null,
+		'resources': null,
 		'menus': null,
 		'core': null,
 		'assets': null,
@@ -571,6 +611,7 @@ EasyPack.window.add = function(config) {
 		'setup_option': null,
 		'license': null,
 		'tables': null,
+		'modUtilitiesRest': null,
 	}, config.updateData)
 	config.tables = function(key) {
 		if(config.updateData.tables) {
@@ -586,269 +627,331 @@ EasyPack.window.add = function(config) {
 		}
 	},
 		this.ident = config.ident || 'EasyPack' + Ext.id()
+	var fields = [
+		{
+			xtype: 'hidden',
+			name: 'id',
+			id: 'add-' + this.ident + '-id',
+			value: config.updateId || null,
+			allowBlank: true
+		},
+		{
+			xtype: 'textfield',
+			fieldLabel: _('name'),
+			name: 'name',
+			id: 'add-' + this.ident + '-name',
+			anchor: '99%',
+			value: config.updateData.name || null,
+			allowBlank: false,
+		},
+		{
+			xtype: 'textfield',
+			fieldLabel: _('version'),
+			emptyText: '0.0.1-pl',
+			name: 'version',
+			id: 'add-' + this.ident + '-version',
+			anchor: '99%',
+			value: config.updateData.version || null,
+			allowBlank: false
+		},
+
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('chunk'),
+			name: 'chunks',
+			id: 'add-' + this.ident + '-chunk',
+			anchor: '99%',
+			value: todata(config.updateData.chunks) || null,
+			forceSelection: true,
+			fields: ['id', 'name', 'category_name'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'element/chunk/getlist', combo: 1, sort: 'id',
+				dir: 'DESK',
+			},
+			allowBlank: true,
+			valueField: 'name',
+			displayField: 'name',
+			tpl: elemTemplate
+		},
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('snippet'),
+			name: 'snippets',
+			id: 'add-' + this.ident + '-snippet',
+			anchor: '99%',
+			value: todata(config.updateData.snippets),
+			forceSelection: true,
+			fields: ['id', 'name', 'category_name'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'element/snippet/getlist', combo: 1, sort: 'id',
+				dir: 'DESK',
+			},
+			allowBlank: true,
+			valueField: 'name',
+			displayField: 'name',
+			tpl: elemTemplate
+		},
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('plugin'),
+			name: 'plugins',
+			id: 'add-' + this.ident + '-plugin',
+			anchor: '99%',
+			value: todata(config.updateData.plugins),
+			forceSelection: true,
+			fields: ['id', 'name', 'category_name'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'element/plugin/getlist', combo: 1, sort: 'id',
+				dir: 'DESK'
+			},
+			allowBlank: true,
+			valueField: 'name',
+			displayField: 'name',
+			tpl: elemTemplate
+		},
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('template'),
+			name: 'templates',
+			id: 'add-' + this.ident + '-template',
+			anchor: '99%',
+			value: todata(config.updateData.templates, 'templatename'),
+			forceSelection: true,
+			fields: ['id', 'templatename', 'category_name'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'element/template/getlist', combo: 1, sort: 'id',
+				dir: 'DESK',
+			},
+			allowBlank: true,
+			valueField: 'templatename',
+			displayField: 'templatename',
+			tpl: elemTemplate2
+		},
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('resources'),
+			name: 'resources',
+			id: 'add-' + this.ident + '-resources',
+			anchor: '99%',
+			value: todata(config.updateData.resources, 'id'),
+			forceSelection: true,
+			fields: ['id', 'pagetitle', 'uri'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'resource/getlist', combo: 1, sort: 'id',
+				dir: 'DESK',
+			},
+			allowBlank: true,
+			valueField: 'id',
+			displayField: 'id',
+			tpl: elemTemplate6
+		},
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('edit_menu'),
+			name: 'menus',
+			id: 'add-' + this.ident + '-menu',
+			anchor: '99%',
+			value: todata(config.updateData.menus, 'text'),
+			forceSelection: true,
+			fields: ['text', 'text_lex', 'parent', 'namespace'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'system/menu/getlist', combo: 1, sort: 'namespace',
+				dir: 'DESK',
+			},
+			allowBlank: true,
+			valueField: 'text',
+			displayField: 'text',
+			tpl: elemTemplate3
+		},
+		{
+			xtype: 'EasyPack-combo-modComboSuper',
+			fieldLabel: _('settings'),
+			name: 'settings',
+			id: 'add-' + this.ident + '-setting',
+			anchor: '99%',
+			value: todata(config.updateData.settings, 'key'),
+			forceSelection: true,
+			fields: ['key', 'name_trans', 'namespace'],
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'system/settings/getlist', combo: 1, sort: 'namespace',
+				dir: 'DESK',
+			},
+			allowBlank: true,
+			valueField: 'key',
+			displayField: 'key',
+			tpl: elemTemplate4
+		},
+
+		{
+			xtype: 'textarea',
+			toolTip: 'имена таблиц через запятую (с префиксом)',
+			fieldLabel: _('EasyPack.tables'),
+			name: 'tables',
+			id: 'add-' + this.ident + '-tables',
+			anchor: '99%',
+			value: config.tables('tables') || null,
+			allowBlank: true,
+			rootVisible: true,
+			listeners: ToolTip,
+
+		},
+		{
+			xtype: 'textfield',
+			fieldLabel: _('EasyPack.prefix'),
+			name: 'prefix',
+			id: 'add-' + this.ident + '-prefix',
+			anchor: '99%',
+			value: config.tables('prefix') || null,
+			allowBlank: true,
+			rootVisible: true,
+			listeners: ToolTip,
+		},
+		{
+			xtype: 'textfield',
+			fieldLabel: _('EasyPack.core'),
+			toolTip: _('EasyPack.description.core'),
+			listeners: ToolTip,
+			name: 'core',
+			id: 'add-' + this.ident + '-core',
+			anchor: '99%',
+			value: config.updateData['core'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			source: MODx.config.default_media_source,
+			openTo: '/core/components',
+		},
+		{
+			xtype: 'textfield',
+			fieldLabel: _('EasyPack.assets'),
+			toolTip: _('EasyPack.description.assets'),
+			listeners: ToolTip,
+			name: 'assets',
+			id: 'add-' + this.ident + '-assets',
+			anchor: '99%',
+			value: config.updateData['assets'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			source: MODx.config.default_media_source,
+			openTo: '/core/components',
+		},
+		{
+			xtype: 'textarea',
+			name: 'requires',
+			fieldLabel: _('EasyPack.requires'),
+			tooltip: _('EasyPack.description.requires'),
+			id: 'add-' + this.ident + '-requires',
+			anchor: '99%',
+			value: config.updateData['requires'] || null,
+			allowBlank: true,
+			rootVisible: true,
+		},
+
+		{
+			xtype: 'modx-combo-browser',
+			name: 'readme',
+			tooltip: _('EasyPack.description.readme'),
+			fieldLabel: _('EasyPack.readme'),
+			id: 'add-' + this.ident + '-readme',
+			anchor: '99%',
+			value: config.updateData['readme'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			source: MODx.config.default_media_source,
+			openTo: '/core/components'
+		},
+		{
+			xtype: 'modx-combo-browser',
+			name: 'changelog',
+			tooltip: _('EasyPack.description.changelog'),
+			fieldLabel: _('EasyPack.changelog'),
+			id: 'add-' + this.ident + '-changelog',
+			anchor: '99%',
+			value: config.updateData['changelog'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			source: MODx.config.default_media_source,
+			openTo: '/core/components'
+		},
+		{
+			xtype: 'modx-combo-browser',
+			fieldLabel: _('EasyPack.setup_option'),
+			tooltip: _('EasyPack.description.setup_option'),
+			listeners: ToolTip,
+			name: 'setup_option',
+			id: 'add-' + this.ident + '-setup_option',
+			anchor: '99%',
+			value: config.updateData['setup_option'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			allowedFileTypes: 'php',
+			source: MODx.config.default_media_source,
+			openTo: '/core/components'
+		},
+		{
+			xtype: 'modx-combo-browser',
+			tooltip: _('EasyPack.description.php_resolver'),
+			fieldLabel: _('EasyPack.php_resolver'),
+			listeners: ToolTip,
+			name: 'php_resolver',
+			id: 'add-' + this.ident + '-php_resolver',
+			anchor: '99%',
+			value: config.updateData['php_resolver'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			allowedFileTypes: 'php',
+			source: MODx.config.default_media_source,
+			openTo: 'core/components/'
+
+		},
+		{
+			xtype: 'modx-combo-browser',
+			tooltip: _('EasyPack.description.license'),
+			fieldLabel: _('EasyPack.license'),
+			listeners: ToolTip,
+			name: 'license',
+			id: 'add-' + this.ident + '-license',
+			anchor: '99%',
+			value: config.updateData['license'] || null,
+			allowBlank: true,
+			rootVisible: true,
+			source: MODx.config.default_media_source,
+			openTo: '/core/components'
+		},
+	]
+	if(modUtil) {
+		fields.push(
+			{
+				xtype: 'EasyPack-combo-modComboSuper',
+				fieldLabel: _('EasyPack.modUtilitiesRest'),
+				name: 'modUtilitiesRest',
+				id: 'add-' + this.ident + '-modUtilitiesRest',
+				anchor: '99%',
+				value: todata(config.updateData.modUtilitiesRest,'url'),
+				forceSelection: true,
+				fields: ['id', 'url', 'snippet'],
+				url: modUtilConnector_url,
+				baseParams: {
+					action: 'mgr/rest/getRest', combo: 1, sort: 'id',
+					dir: 'DESK',
+				},
+				allowBlank: true,
+				valueField: 'url',
+				displayField: 'url',
+				tpl: elemTemplate5
+			},
+		)
+	}
 
 	Ext.applyIf(config, {
 		title: _('EasyPack.create_new_pack'),
-		fields: [
-			{
-				xtype: 'hidden',
-				name: 'id',
-				id: 'add-' + this.ident + '-id',
-				value: config.updateId || null,
-				allowBlank: true
-			},
-			{
-				xtype: 'textfield',
-				fieldLabel: _('name'),
-				name: 'name',
-				id: 'add-' + this.ident + '-name',
-				anchor: '99%',
-				value: config.updateData.name || null,
-				allowBlank: false,
-			},
-			{
-				xtype: 'textfield',
-				fieldLabel: _('version'),
-				name: 'version',
-				id: 'add-' + this.ident + '-version',
-				anchor: '99%',
-				value: config.updateData.version || null,
-				allowBlank: false
-			},
-
-			{
-				xtype: 'EasyPack-combo-modComboSuper',
-				fieldLabel: _('chunk'),
-				name: 'chunks',
-				id: 'add-' + this.ident + '-chunk',
-				anchor: '99%',
-				value: todata(config.updateData.chunks) || null,
-				forceSelection: true,
-				fields: ['id', 'name', 'category_name'],
-				url: MODx.config.connector_url,
-				baseParams: {action: 'element/chunk/getlist', combo: 1, dir: 'name'},
-				allowBlank: true,
-				valueField: 'name',
-				displayField: 'name',
-				tpl: elemTemplate
-			},
-			{
-				xtype: 'EasyPack-combo-modComboSuper',
-				fieldLabel: _('snippet'),
-				name: 'snippets',
-				id: 'add-' + this.ident + '-snippet',
-				anchor: '99%',
-				value: todata(config.updateData.snippets),
-				forceSelection: true,
-				fields: ['id', 'name', 'category_name'],
-				url: MODx.config.connector_url,
-				baseParams: {action: 'element/snippet/getlist', combo: 1, dir: 'name'},
-				allowBlank: true,
-				valueField: 'name',
-				displayField: 'name',
-				tpl: elemTemplate
-			},
-			{
-				xtype: 'EasyPack-combo-modComboSuper',
-				fieldLabel: _('plugin'),
-				name: 'plugins',
-				id: 'add-' + this.ident + '-plugin',
-				anchor: '99%',
-				value: todata(config.updateData.plugins),
-				forceSelection: true,
-				fields: ['id', 'name', 'category_name'],
-				url: MODx.config.connector_url,
-				baseParams: {action: 'element/plugin/getlist', combo: 1, dir: 'name'},
-				allowBlank: true,
-				valueField: 'name',
-				displayField: 'name',
-				tpl: elemTemplate
-			},
-			{
-				xtype: 'EasyPack-combo-modComboSuper',
-				fieldLabel: _('template'),
-				name: 'templates',
-				id: 'add-' + this.ident + '-template',
-				anchor: '99%',
-				value: todata(config.updateData.templates, 'templatename'),
-				forceSelection: true,
-				fields: ['id', 'templatename', 'category_name'],
-				url: MODx.config.connector_url,
-				baseParams: {action: 'element/template/getlist', combo: 1, dir: 'name'},
-				allowBlank: true,
-				valueField: 'templatename',
-				displayField: 'templatename',
-				tpl: elemTemplate2
-			},
-			{
-				xtype: 'EasyPack-combo-modComboSuper',
-				fieldLabel: _('edit_menu'),
-				name: 'menus',
-				id: 'add-' + this.ident + '-menu',
-				anchor: '99%',
-				value: todata(config.updateData.menus, 'text'),
-				forceSelection: true,
-				fields: ['text', 'text_lex', 'parent', 'namespace'],
-				url: MODx.config.connector_url,
-				baseParams: {action: 'system/menu/getlist', combo: 1, dir: 'text'},
-				allowBlank: true,
-				valueField: 'text',
-				displayField: 'text',
-				tpl: elemTemplate3
-			},
-			{
-				xtype: 'EasyPack-combo-modComboSuper',
-				fieldLabel: _('settings'),
-				name: 'settings',
-				id: 'add-' + this.ident + '-setting',
-				anchor: '99%',
-				value: todata(config.updateData.settings, 'key'),
-				forceSelection: true,
-				fields: ['key', 'name_trans', 'namespace'],
-				url: MODx.config.connector_url,
-				baseParams: {action: 'system/settings/getlist', combo: 1, dir: 'text'},
-				allowBlank: true,
-				valueField: 'key',
-				displayField: 'key',
-				tpl: elemTemplate4
-			},
-
-			{
-				xtype: 'textarea',
-				toolTip: 'имена таблиц через запятую (с префиксом)',
-				fieldLabel: _('EasyPack.tables'),
-				name: 'tables',
-				id: 'add-' + this.ident + '-tables',
-				anchor: '99%',
-				value: config.tables('tables') || null,
-				allowBlank: true,
-				rootVisible: true,
-				listeners: ToolTip,
-
-			},
-			{
-				xtype: 'textfield',
-				fieldLabel: _('EasyPack.prefix'),
-				name: 'prefix',
-				id: 'add-' + this.ident + '-prefix',
-				anchor: '99%',
-				value: config.tables('prefix') || null,
-				allowBlank: true,
-				rootVisible: true,
-				listeners: ToolTip,
-			},
-			{
-				xtype: 'textfield',
-				fieldLabel: _('EasyPack.core'),
-				toolTip: _('EasyPack.description.core'),
-				listeners: ToolTip,
-				name: 'core',
-				id: 'add-' + this.ident + '-core',
-				anchor: '99%',
-				value: config.updateData['core'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				source: MODx.config.default_media_source,
-				openTo: '/core/components',
-			},
-			{
-				xtype: 'textfield',
-				fieldLabel: _('EasyPack.assets'),
-				toolTip: _('EasyPack.description.assets'),
-				listeners: ToolTip,
-				name: 'assets',
-				id: 'add-' + this.ident + '-assets',
-				anchor: '99%',
-				value: config.updateData['assets'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				source: MODx.config.default_media_source,
-				openTo: '/core/components',
-			},
-			{
-				xtype: 'textarea',
-				name: 'requires',
-				fieldLabel: _('EasyPack.requires'),
-				tooltip: _('EasyPack.description.requires'),
-				id: 'add-' + this.ident + '-requires',
-				anchor: '99%',
-				value: config.updateData['requires'] || null,
-				allowBlank: true,
-				rootVisible: true,
-			},
-
-			{
-				xtype: 'modx-combo-browser',
-				name: 'readme',
-				tooltip: _('EasyPack.description.readme'),
-				fieldLabel: _('EasyPack.readme'),
-				id: 'add-' + this.ident + '-readme',
-				anchor: '99%',
-				value: config.updateData['readme'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				source: MODx.config.default_media_source,
-				openTo: '/core/components'
-			},
-			{
-				xtype: 'modx-combo-browser',
-				name: 'changelog',
-				tooltip: _('EasyPack.description.changelog'),
-				fieldLabel: _('EasyPack.changelog'),
-				id: 'add-' + this.ident + '-changelog',
-				anchor: '99%',
-				value: config.updateData['changelog'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				source: MODx.config.default_media_source,
-				openTo: '/core/components'
-			},
-			{
-				xtype: 'modx-combo-browser',
-				fieldLabel: _('EasyPack.setup_option'),
-				tooltip: _('EasyPack.description.setup_option'),
-				listeners: ToolTip,
-				name: 'setup_option',
-				id: 'add-' + this.ident + '-setup_option',
-				anchor: '99%',
-				value: config.updateData['setup_option'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				allowedFileTypes: 'php',
-				source: MODx.config.default_media_source,
-				openTo: '/core/components'
-			},
-			{
-				xtype: 'modx-combo-browser',
-				tooltip: _('EasyPack.description.php_resolver'),
-				fieldLabel: _('EasyPack.php_resolver'),
-				listeners: ToolTip,
-				name: 'php_resolver',
-				id: 'add-' + this.ident + '-php_resolver',
-				anchor: '99%',
-				value: config.updateData['php_resolver'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				allowedFileTypes: 'php',
-				source: MODx.config.default_media_source,
-				openTo: 'core/components/'
-
-			},
-			{
-				xtype: 'modx-combo-browser',
-				tooltip: _('EasyPack.description.license'),
-				fieldLabel: _('EasyPack.license'),
-				listeners: ToolTip,
-				name: 'license',
-				id: 'add-' + this.ident + '-license',
-				anchor: '99%',
-				value: config.updateData['license'] || null,
-				allowBlank: true,
-				rootVisible: true,
-				source: MODx.config.default_media_source,
-				openTo: '/core/components'
-			},
-		],
+		fields: fields,
 		action: 'mgr/create',
 		listeners: {
 			beforeSubmit: function(a) {

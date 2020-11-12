@@ -11,6 +11,8 @@
 			case xPDOTransport::ACTION_UPGRADE:
 			case xPDOTransport::ACTION_INSTALL:
 				$modx->addPackage(\'' . $PKG_NAME_LOWER . '\', MODX_CORE_PATH . \'components/' . $PKG_NAME_LOWER . '/model/\');
+				$modx->addExtensionPackage(\'' . $PKG_NAME_LOWER . '\', MODX_CORE_PATH . \'components/' . $PKG_NAME_LOWER . '/model/\');
+
 				$manager = $modx->getManager();
 				if($manager){
 				' . $code . '

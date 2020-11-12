@@ -17,6 +17,7 @@ $xpdo_meta_map['EasypackExtras']= array (
     'snippets' => NULL,
     'plugins' => NULL,
     'templates' => NULL,
+    'resources' => NULL,
     'menus' => NULL,
     'settings' => NULL,
     'core' => NULL,
@@ -29,6 +30,7 @@ $xpdo_meta_map['EasypackExtras']= array (
     'license' => NULL,
     'tables' => NULL,
     'path_to_last_transport' => NULL,
+    'modUtilitiesRest' => NULL,
   ),
   'fieldMeta' => 
   array (
@@ -69,6 +71,12 @@ $xpdo_meta_map['EasypackExtras']= array (
       'null' => true,
     ),
     'templates' => 
+    array (
+      'dbtype' => 'text',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'resources' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
@@ -141,6 +149,12 @@ $xpdo_meta_map['EasypackExtras']= array (
       'null' => true,
     ),
     'path_to_last_transport' => 
+    array (
+      'dbtype' => 'text',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'modUtilitiesRest' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',

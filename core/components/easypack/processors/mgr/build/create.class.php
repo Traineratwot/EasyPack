@@ -5,13 +5,13 @@
 		public $classKey = 'EasypackExtras';
 		public $directories = [];
 
-		public $prefix;
-		public $dbtype;
-		public $tables;
-		public $modelPath;
-		public $PKG_NAME;
-		public $PKG_NAME_LOWER;
-		public $dbName;
+		public $prefix = '';
+		public $dbtype = '';
+		public $tables = [];
+		public $modelPath = '';
+		public $PKG_NAME = '';
+		public $PKG_NAME_LOWER = '';
+		public $dbName = '';
 		/**
 		 * @var object|EasypackExtras $Easypack
 		 */
@@ -46,20 +46,27 @@
 				} else {
 					return $this->failure('id not found', ['line' => __LINE__]);
 				}
-				$this->PKG_NAME = $this->Easypack->get('name');
+				$this->PKG_NAME = $this->Easypack->getProperty('name', FALSE);
 				$this->PKG_NAME_LOWER = str_replace([' ', '-', '.', '*', '!', '@', '#', '$', '%', '^', '&', '_'], '', mb_strtolower($this->PKG_NAME));
-
-				$tables = json_decode($this->Easypack->get('tables'), 1);
+				$tables = $this->Easypack->getProperty('tables', FALSE);
+				if ($tables) {
+					$tables = json_decode($tables, 1);
+					if (!is_array($tables['tables'])) {
+						$this->tables = [];
+						$this->prefix = '';
+					} else {
+						$this->prefix = isset($tables['prefix']) ? $tables['prefix'] : $this->modx->config['table_prefix'];
+						$this->tables = $tables['tables'];
+					}
+				}
 				$this->dbName = $this->modx->config['dbname'];
-				$this->prefix = isset($tables['prefix']) ? $tables['prefix'] : $this->modx->config['table_prefix'];
 				$this->dbtype = $this->modx->config['dbtype'];
-				$this->tables = $tables['tables'];
 				$this->classes = [
-					'plugins' => ['k' => 'plugin', 'name' => 'modPlugin', 'ext' => 'php'],
-					'snippets' => ['k' => 'snippet', 'name' => 'modSnippet', 'ext' => 'php'],
-					'chunks' => ['k' => 'chunk', 'name' => 'modChunk', 'ext' => 'tpl'],
-					'templates' => ['k' => 'template', 'name' => 'modTemplate', 'ext' => 'tpl'],
-//		    		'resources' => 'modResource',
+					'plugins' => ['k' => 'name', 'name' => 'modPlugin', 'ext' => 'php', 'processor' => 'element/plugin/update'],
+					'snippets' => ['k' => 'name', 'name' => 'modSnippet', 'ext' => 'php', 'processor' => 'element/snippet/update'],
+					'chunks' => ['k' => 'name', 'name' => 'modChunk', 'ext' => 'tpl', 'processor' => 'element/chunk/update'],
+					'templates' => ['k' => 'templatename', 'name' => 'modTemplate', 'ext' => 'tpl', 'processor' => 'element/template/update'],
+					//'resources' => ['k' => 'id'          , 'name' => 'modResource', 'ext' => 'tpl', 'processor'=>'resource/update'],
 				];
 				$this->modelPath = MODX_BASE_PATH . $this->Easypack->get('core') . '/model/';
 
@@ -164,7 +171,9 @@
 				$this->Easypack->save();
 			}
 
-			if ((bool)$this->getProperty('create__model_') and count($this->tables) > 0) {
+
+			$this->_prepareResources();
+			if ((bool)$this->getProperty('create__model_') and !empty($this->tables)) {
 				$this->_GenShema();
 			}
 			if ((bool)$this->getProperty('create__js_mgr_')) {
@@ -181,6 +190,39 @@
 			}
 			if ((bool)$this->getProperty('create__elements_')) {
 				$this->_addElements();
+			}
+
+		}
+
+		public function _prepareResources()
+		{
+			$resources = $this->Easypack->getResources();
+			if (is_array($resources) and !empty($resources)) {
+				$r = $this->modx->newQuery('modResource');
+				$r->select('template,pagetitle');
+				$r->where([
+					'id:in' => $resources,
+				]);
+				$resources = $this->modx->getIterator('modResource', $r);
+
+				/** @var modResource $res */
+				foreach ($resources as $res) {
+					/** @var modTemplate $template */
+					$template = $this->modx->getObject('modTemplate', $res->get('template'));
+					$templates = $this->Easypack->getTemplates();
+					if (is_array($templates) and !empty($templates)) {
+						$templates[] = $template->get('templatename');
+						$templates = array_unique($templates);
+					} else {
+						$templates = [$template->get('templatename')];
+					}
+					$this->Easypack->set('templates', $templates);
+
+				}
+				if ($this->Easypack->isDirty('templates')) {
+					$this->Easypack->save();
+
+				}
 			}
 		}
 
@@ -237,35 +279,49 @@
 
 		public function _GenShema()
 		{
-			$manager = $this->modx->getManager();
-			$dbType = $this->dbtype;
-			if (!class_exists('my_xPDOGenerator_' . $dbType)) {
-				include(MODX_CORE_PATH . 'components/easypack/model/my_xpdogenerator.class.php');
-			}
-
-			if (class_exists('my_xPDOGenerator_' . $dbType)) {
-				$generatorClass = 'my_xPDOGenerator_' . $dbType;
-				/** @var my_xPDOGenerator_mysql $generator */
-				$generator = new $generatorClass($manager);
-
-				// set the allowed tables:
-				$generator->setAllowedTables($this->tables);
-
-				$xml_schema_file = $this->modelPath . $this->PKG_NAME_LOWER . '/' . $this->PKG_NAME_LOWER . '.mysql.schema.xml';
-				// (re)Build the schema file
-				// echo 'Scheme: '.$cmp->get('build_scheme');
-				// set the db:
-
-				$generator->setDatabase($this->dbName);
-				$restrict_prefix = TRUE;
-				if (!empty($this->dbName) && empty($this->prefix)) {
-					$restrict_prefix = FALSE;
+			try {
+				$manager = $this->modx->getManager();
+				$dbType = $this->dbtype;
+				if (!class_exists('my_xPDOGenerator_' . $dbType)) {
+					include(MODX_CORE_PATH . 'components/easypack/model/my_xpdogenerator.class.php');
 				}
-				// now generate the scheme
-				$xml = $generator->writeTableSchema($xml_schema_file, $this->PKG_NAME_LOWER, 'xPDOObject', $this->prefix, $restrict_prefix);
-				if ($xml and file_exists($xml_schema_file)) {
-					$generator->parseSchema($xml_schema_file, $this->directories['model']);
+
+				if (class_exists('my_xPDOGenerator_' . $dbType)) {
+					$generatorClass = 'my_xPDOGenerator_' . $dbType;
+					/** @var my_xPDOGenerator_mysql $generator */
+					$generator = new $generatorClass($manager);
+
+					// set the allowed tables:
+					if (empty($this->tables)) {
+						throw new Exception('table not set');
+					}
+					$generator->setAllowedTables($this->tables);
+
+					$xml_schema_file = $this->modelPath . $this->PKG_NAME_LOWER . '/' . $this->PKG_NAME_LOWER . '.mysql.schema.xml';
+					// (re)Build the schema file
+					// echo 'Scheme: '.$cmp->get('build_scheme');
+					// set the db:
+
+					$generator->setDatabase($this->dbName);
+					$restrict_prefix = TRUE;
+					if (!empty($this->dbName) && empty($this->prefix)) {
+						$restrict_prefix = FALSE;
+					}
+					// now generate the scheme
+					if (file_exists($xml_schema_file)) {
+						unlink($xml_schema_file);
+					}
+					$xml = $generator->writeTableSchema($xml_schema_file, $this->PKG_NAME_LOWER, 'xPDOObject', $this->prefix, $restrict_prefix);
+					if ($xml and file_exists($xml_schema_file)) {
+						$generator->parseSchema($xml_schema_file, $this->directories['model']);
+					} else {
+						throw new Exception('can`t create xml sheme');
+					}
+				} else {
+					throw new Exception('class ' . 'my_xPDOGenerator_' . $dbType . ' not found');
 				}
+			} catch (Exception $e) {
+				$this->modx->log(MODX_LOG_LEVEL_ERROR, $e->getMessage(), '', '', $e->getFile(), $e->getLine());
 			}
 
 		}
@@ -273,22 +329,29 @@
 		public function _GenNamespace()
 		{
 			/** @var modNamespace $Namespace */
-			$Namespace = $this->modx->newObject('modNamespace');
-			$Namespace->set('name', $this->PKG_NAME_LOWER);
-			$Namespace->set('path', '{core_path}components/' . $this->PKG_NAME_LOWER . '/');
-			$Namespace->set('assets_path', '{assets_path}components/' . $this->PKG_NAME_LOWER . '/');
-			$Namespace->save();
+			$c = $this->modx->getCount('modNamespace', ['name' => $this->PKG_NAME_LOWER]);
+			if ($c === 0) {
+				$Namespace = $this->modx->newObject('modNamespace');
+				$Namespace->set('name', $this->PKG_NAME_LOWER);
+				$Namespace->set('path', '{core_path}components/' . $this->PKG_NAME_LOWER . '/');
+				$Namespace->set('assets_path', '{assets_path}components/' . $this->PKG_NAME_LOWER . '/');
+				$Namespace->save();
+			}
 		}
 
 		public function _addElements()
 		{
-			foreach ($this->classes as $key => $cls) {
-				$_tmp = $this->Easypack->getProperty($key, FALSE);
-				if ($_tmp !== FALSE and !empty($_tmp)) {
-					$_tmp = @json_decode($_tmp);
-				}
-				foreach ($_tmp as $name) {
-					$this->saveElement($name, $key);
+			if (is_array($this->classes)) {
+				foreach ($this->classes as $key => $cls) {
+					$_tmp = $this->Easypack->getProperty($key, FALSE);
+					if ($_tmp !== FALSE and !empty($_tmp)) {
+						$_tmp = @json_decode($_tmp);
+					}
+					if (is_array($_tmp)) {
+						foreach ($_tmp as $name) {
+							$this->saveElement($name, $key);
+						}
+					}
 				}
 			}
 		}
@@ -297,16 +360,16 @@
 		{
 			$className = $this->classes[$class]['name'];
 			/** @var modChunk $object */
-			$object = $this->modx->getObject($className, ['name' => $name]);
+			$object = $this->modx->getObject($className, [$this->classes[$class]['k'] => $name]);
 			if ($object) {
 				if ((bool)$object->get('isStatic')) {
 
 				} else {
-					$newPath = $this->Easypack->get('core') . '/elements/' . $class . '/' . $name . '.' . $this->classes[$class]['ext'];
+					$newPath = $this->Easypack->getProperty('core') . '/elements/' . $class . '/' . $name . '.' . $this->classes[$class]['ext'];
 					$param = $object->toArray();
-					$param['static'] = 1;
+					$param['static'] = $class == 'plugins' ? 0 : 1;
 					$param['static_file'] = $newPath;
-					$this->modx->runProcessor('element/' . $this->classes[$class]['k'] . '/update', $param);
+					$this->modx->runProcessor($this->classes[$class]['processor'], $param);
 
 				}
 			}
@@ -321,7 +384,7 @@
 				$area = $settingData['area'];
 				$lang = $this->modx->config['manager_language'];
 
-				$core = $this->Easypack->get('core');
+				$core = $this->Easypack->getProperty('core');
 				$langPath = MODX_BASE_PATH . $core . '/lexicon/' . $lang . '/setting.inc.php';
 				if (file_exists($langPath)) {
 					include $langPath;

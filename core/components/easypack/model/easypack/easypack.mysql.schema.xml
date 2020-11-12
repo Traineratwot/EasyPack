@@ -8,6 +8,7 @@
 		<field key="snippets" dbtype="text" phptype="string" null="true" />
 		<field key="plugins" dbtype="text" phptype="string" null="true" />
 		<field key="templates" dbtype="text" phptype="string" null="true" />
+		<field key="resources" dbtype="text" phptype="string" null="true" />
 		<field key="menus" dbtype="text" phptype="string" null="true" />
 		<field key="settings" dbtype="text" phptype="string" null="true" />
 		<field key="core" dbtype="text" phptype="string" null="true" />
@@ -20,5 +21,6 @@
 		<field key="license" dbtype="text" phptype="string" null="true" />
 		<field key="tables" dbtype="text" phptype="string" null="true" />
 		<field key="path_to_last_transport" dbtype="text" phptype="string" null="true" />
+		<field key="modUtilitiesRest" dbtype="text" phptype="string" null="true" />
 	</object>
 </model>

@@ -9,12 +9,15 @@
 		public $classKey = 'EasypackExtras';
 		public $primaryKeyField = 'id';
 		public $required = ['name', 'version'];
-		public $unique = ['name', 'core'];
+		public $unique = ['name'];
 
 		public function beforeSet()
 		{
 
-			if (isset($this->properties['tables']) and !empty($this->properties['prefix'])) {
+			if (isset($this->properties['tables'])) {
+				if (empty($this->properties['prefix'])) {
+					$this->properties['prefix'] = $this->modx->config['table_prefix'];
+				}
 				$tables = [];
 				$tables['tables'] = explode(',', $this->properties['tables']);
 				$tables['tables'] = array_map('trim', $tables['tables']);
@@ -39,8 +42,8 @@
 
 
 			foreach ($this->properties as $key => $prop) {
-
 				if (is_array($prop)) {
+					$prop = array_unique($prop);
 					if (count($prop) == 0) {
 						$this->setProperty($key, NULL);
 					} elseif (count($prop) == 1 and !$prop[0]) {
