@@ -503,6 +503,7 @@
 
 		public function _GenResolver($categoryVehicle)
 		{
+			$code = [];
 			$xml_schema_file = $this->modelPath . $this->PKG_NAME_LOWER . '/' . $this->PKG_NAME_LOWER . '.mysql.schema.xml';
 			if (file_exists($xml_schema_file)) {
 				$SXE = new SimpleXMLElement($xml_schema_file, 0, TRUE);
@@ -512,30 +513,31 @@
 						$classes[] = (string)$object['class'];
 					}
 				}
-				if (!empty($classes)) {
-					$code = [];
-					foreach ($classes as $cls) {
-						$code[] = '$manager->createObjectContainer(\'' . $cls . '\');';
-					}
-					$code = implode("\n", $code);
-					$PKG_NAME_LOWER = $this->PKG_NAME_LOWER;
-					$txt = include MODX_CORE_PATH . 'components/easypack/processors/mgr/build/examples/resolver.php';
-					$this->tmp_resolver = tempnam(sys_get_temp_dir(), $this->PKG_NAME_LOWER . '_resolver_');
-					if (!file_exists($this->tmp_resolver)) {
-						$this->tmp_resolver = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/tmp' . $this->PKG_NAME_LOWER . '.resolver';
-						if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), 0777, 1) && !is_dir($concurrentDirectory)) {
-							$this->modx->log(MODX_LOG_LEVEL_ERROR, sprintf('Directory "%s" was not created', $concurrentDirectory));
-						}
-					}
-					file_put_contents($this->tmp_resolver, $txt);
-					if (!file_exists($this->tmp_resolver)) {
-						$this->modx->log(MODX_LOG_LEVEL_ERROR, sprintf('resolver "%s" was not created', $this->tmp_resolver));
-					}
-					$categoryVehicle->resolve('php', [
-						'source' => $this->tmp_resolver,
-					]);
+			}
+
+			if (!empty($classes)) {
+				foreach ($classes as $cls) {
+					$code[] = '$manager->createObjectContainer(\'' . $cls . '\');';
 				}
 			}
+
+			$code = implode("\n", $code);
+			$PKG_NAME_LOWER = $this->PKG_NAME_LOWER;
+			$txt = include MODX_CORE_PATH . 'components/easypack/processors/mgr/build/examples/resolver.php';
+			$this->tmp_resolver = tempnam(sys_get_temp_dir(), $this->PKG_NAME_LOWER . '_resolver_');
+			if (!file_exists($this->tmp_resolver)) {
+				$this->tmp_resolver = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/tmp' . $this->PKG_NAME_LOWER . '.resolver';
+				if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), 0777, 1) && !is_dir($concurrentDirectory)) {
+					$this->modx->log(MODX_LOG_LEVEL_ERROR, sprintf('Directory "%s" was not created', $concurrentDirectory));
+				}
+			}
+			file_put_contents($this->tmp_resolver, $txt);
+			if (!file_exists($this->tmp_resolver)) {
+				$this->modx->log(MODX_LOG_LEVEL_ERROR, sprintf('resolver "%s" was not created', $this->tmp_resolver));
+			}
+			$categoryVehicle->resolve('php', [
+				'source' => $this->tmp_resolver,
+			]);
 		}
 
 		public function _addReqExtra($categoryVehicle)
@@ -581,7 +583,7 @@
 			}
 		}
 
-		public function _addModUtilRest($UPDATE_OBJECT = FALSE)
+		public function _addModUtilRest($UPDATE_OBJECT = TRUE)
 		{
 			/* start create REST vehicle */
 			$rests = $this->Easypack->getRest();
@@ -602,12 +604,13 @@
 				'package_path' => 'components/modutilities/model/',
 				'package' => 'modutilities',
 				'class' => 'Utilrestcategory',
-				xPDOTransport::UNIQUE_KEY => ['id'],
+				xPDOTransport::UNIQUE_KEY => ['name'],
 			];
 			$this->modx->addPackage('modutilities', MODX_CORE_PATH . 'components/modutilities/model/');
-			$UtilRestCategory = $this->modx->newObject('Utilrestcategory');
-			$cat = rand(500, 10000);
-			$UtilRestCategory->set('id', $cat);
+			$UtilRestCategory = $this->modx->getObject('Utilrestcategory', ['name' => $this->PKG_NAME]);
+			if (!$UtilRestCategory instanceof Utilrestcategory) {
+				$UtilRestCategory = $this->modx->newObject('Utilrestcategory');
+			}
 			$UtilRestCategory->set('name', $this->PKG_NAME);
 			$vehicle2 = $this->builder->createVehicle($UtilRestCategory, $attr2);
 			$this->builder->putVehicle($vehicle2);
@@ -615,7 +618,7 @@
 				if ($restId) {
 					$rest = $this->modx->getObject('Utilrest', ['url' => $restId]);
 					if ($rest) {
-						$rest->set('category', $cat);
+						$rest->set('category', $this->PKG_NAME);
 						$vehicle = $this->builder->createVehicle($rest, $attr);
 						$this->builder->putVehicle($vehicle);
 					}
@@ -709,7 +712,7 @@
 				$test = $this->builder->pack();
 
 				$this->tend = microtime(TRUE);
-				$this->time = " <strong>$this->PKG_NAME</strong> time: <strong>".round(($this->tend - $this->tstart) * 1000) . '</strong> ms';
+				$this->time = " <strong>$this->PKG_NAME</strong> time: <strong>" . round(($this->tend - $this->tstart) * 1000) . '</strong> ms';
 				if ($this->tmp_resolver) {
 					unlink($this->tmp_resolver);
 				}

@@ -403,12 +403,18 @@ EasyPack.panel.Home = function(config) {
 									rowIndex: rowIndex,
 									handler: this.build
 								})
-								//m.push({
-								//	text: _('EasyPack.test'),
-								//	grid: grid,
-								//	rowIndex: rowIndex,
-								//	handler: this.test
-								//})
+								m.push({
+									text: _('EasyPack.getResolver'),
+									grid: grid,
+									rowIndex: rowIndex,
+									handler: this.getResolver
+								})
+								// m.push({
+								// 	text: _('EasyPack.test'),
+								// 	grid: grid,
+								// 	rowIndex: rowIndex,
+								// 	handler: this.test
+								// })
 								return m
 							},
 
@@ -532,7 +538,36 @@ EasyPack.panel.Home = function(config) {
 										}
 									}
 								})
-							}
+							},
+							getResolver: function() {
+								var cs = this.getSelectedAsList()
+								var self = this
+								var data = this.getSelectionModel().getSelections()[0].data
+								MODx.msg.confirm({
+									title: _('create'),
+									text: _('confirm'),
+									url: EasyPackConnector_url,
+									params: {
+										action: 'mgr/build/genresolver',
+										id: cs,
+									},
+									listeners: {
+										'success': {
+											fn: function(r) {
+												Ext.MessageBox.show({
+													title: config.title || '',
+													msg: r.message || '',
+													width: window.innerWidth / 100 * 50,
+													height: window.innerHeight / 100 * 50,
+													buttons: Ext.MessageBox.CANCEL,
+													icon: Ext.MessageBox.QUESTION
+												})
+												self.refresh()
+											}, scope: true
+										}
+									}
+								})
+							},
 						}
 						]
 					},

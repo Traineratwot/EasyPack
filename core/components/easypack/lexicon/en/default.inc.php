@@ -29,6 +29,7 @@
 	$_lang['EasyPack.path_to_last_transport']        = 'Link to latest package';
 	$_lang['EasyPack.test']                          = 'Test Package';
 	$_lang['EasyPack.testing']                       = 'Test result [[+ name]]';
+	$_lang['EasyPack.getResolver']                   = 'get prepared resolver';
 
 	$_lang['_ js_mgr_']                              = 'create folder <strong style="color: black;"> / js / mgr </strong> in assets / components / [[+ name]] /?';
 	$_lang['_ controllers_mgr_']                     = 'create a <strong style="color: black;"> / controllers / mgr </strong> folder in core / components / [[+ name]] /?';

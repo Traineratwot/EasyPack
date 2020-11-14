@@ -28,6 +28,7 @@
 	$_lang['EasyPack.path_to_last_transport']       = 'Ссылка на последний пакет';
 	$_lang['EasyPack.test']                         = 'Тестировать пакет';
 	$_lang['EasyPack.testing']                      = 'Результат тестирование [[+name]]';
+	$_lang['EasyPack.getResolver']                  = 'Получить подготовленный resolver';
 
 	$_lang['_js_mgr_']                              = 'Создать папку <strong style="color: black;">/js/mgr </strong> в assets/components/[[+name]]/?';
 	$_lang['_controllers_mgr_']                     = 'Создать папку <strong style="color: black;">/controllers/mgr </strong> в core/components/[[+name]]/?';
