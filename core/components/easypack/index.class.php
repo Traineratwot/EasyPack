@@ -25,7 +25,13 @@
 			$this->addJavascript('https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js');
 			$this->addJavascript($assets . 'components/easypack/js/mgr/jsonHighlighter.min.js');
 			$this->addJavascript($assets . 'components/easypack/js/mgr/main.tab.js');
+			$this->addJavascript($assets . 'components/easypack/js/highlight/highlight.pack.js');
+			$this->addJavascript($assets . 'components/easypack/js/showdown/dist/showdown.js');
+			$this->addLastJavascript($assets . 'components/easypack/js/mgr/wiki.js');
+
 			$this->addCss($assets . 'components/easypack/css/mgr/main.tab.css');
+			$this->addCss($assets . 'components/easypack/js/highlight/styles/github.css');
+
 			$modUtil = file_exists(MODX_CORE_PATH . 'components/modutilities');
 			$this->addHtml('
 			<script type="text/javascript">

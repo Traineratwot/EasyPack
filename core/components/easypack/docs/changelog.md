@@ -1,3 +1,5 @@
+## [2.4.0] - 2020-09-01
+ - add WIKI
 ## [2.3.3] - 2020-09-01
  - bug fixes and improvements
  - add resolver preview

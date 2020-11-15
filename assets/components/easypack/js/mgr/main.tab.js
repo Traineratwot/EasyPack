@@ -571,6 +571,17 @@ EasyPack.panel.Home = function(config) {
 						}
 						]
 					},
+					{
+						title: 'Wiki',
+						id:'Wiki-tabs',
+						xtype: 'modx-tabs',
+						deferredRender: false,
+						border: true,
+						items: [
+
+						]
+
+					}
 				]
 			}
 		]
@@ -651,7 +662,7 @@ EasyPack.window.add = function(config) {
 	config.tables = function(key) {
 		if(config.updateData.tables) {
 			var data = JSON.parse(config.updateData.tables)
-			switch(key) {
+			switch( key ) {
 				case 'tables':
 					return data.tables.join(',')
 					break
@@ -968,7 +979,7 @@ EasyPack.window.add = function(config) {
 				name: 'modUtilitiesRest',
 				id: 'add-' + this.ident + '-modUtilitiesRest',
 				anchor: '99%',
-				value: todata(config.updateData.modUtilitiesRest,'url'),
+				value: todata(config.updateData.modUtilitiesRest, 'url'),
 				forceSelection: true,
 				fields: ['id', 'url', 'snippet'],
 				url: modUtilConnector_url,
