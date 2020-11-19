@@ -46,3 +46,7 @@ showdown.subParser('makehtml.codeSpans', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.codeSpans.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=codeSpans.js.map
+
+//# sourceMappingURL=codeSpans.js.map

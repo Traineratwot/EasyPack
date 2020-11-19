@@ -145,7 +145,7 @@
 
 		public function generate()
 		{
-			$permissions = $this->modx->config['new_file_permissions'] ?: 0777;
+			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			foreach ($this->directories as $key => $value) {
 				if (!is_dir($value)) {
 					if (!@mkdir($value, $permissions, 1) && !is_dir($value)) {
@@ -413,7 +413,7 @@
 			$k2 = 'setting_' . $key . '_desc';
 
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
-			$permissions = $this->modx->config['new_file_permissions'] ?: 0777;
+			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$prefix = $this->modx->config['table_prefix'];
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE name in('{$k1}','{$k2}')");
 			if ($_lang) {
@@ -452,7 +452,7 @@
 			$k1 = '';
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
 			$prefix = $this->modx->config['table_prefix'];
-			$permissions = $this->modx->config['new_file_permissions'] ?: 0777;
+			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE `name` = '{$k1}'");
 			if ($_lang) {
 				$_lang = $_lang->fetchAll(PDO::FETCH_KEY_PAIR);

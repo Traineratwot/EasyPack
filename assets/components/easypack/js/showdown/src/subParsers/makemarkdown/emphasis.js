@@ -13,3 +13,7 @@ showdown.subParser('makeMarkdown.emphasis', function (node, globals) {
   }
   return txt;
 });
+
+//# sourceMappingURL=emphasis.js.map
+
+//# sourceMappingURL=emphasis.js.map

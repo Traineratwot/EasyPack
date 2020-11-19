@@ -16,3 +16,7 @@ showdown.subParser('makehtml.horizontalRule', function (text, options, globals) 
   text = globals.converter._dispatch('makehtml.horizontalRule.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=horizontalRule.js.map
+
+//# sourceMappingURL=horizontalRule.js.map

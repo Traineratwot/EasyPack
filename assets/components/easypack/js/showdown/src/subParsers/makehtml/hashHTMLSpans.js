@@ -56,3 +56,7 @@ showdown.subParser('makehtml.unhashHTMLSpans', function (text, options, globals)
   text = globals.converter._dispatch('makehtml.unhashHTMLSpans.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=hashHTMLSpans.js.map
+
+//# sourceMappingURL=hashHTMLSpans.js.map

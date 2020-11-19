@@ -30,3 +30,7 @@ showdown.subParser('makehtml.blockGamut', function (text, options, globals) {
 
   return text;
 });
+
+//# sourceMappingURL=blockGamut.js.map
+
+//# sourceMappingURL=blockGamut.js.map

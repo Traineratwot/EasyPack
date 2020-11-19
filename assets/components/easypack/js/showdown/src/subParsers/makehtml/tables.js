@@ -141,3 +141,7 @@ showdown.subParser('makehtml.tables', function (text, options, globals) {
 
   return text;
 });
+
+//# sourceMappingURL=tables.js.map
+
+//# sourceMappingURL=tables.js.map

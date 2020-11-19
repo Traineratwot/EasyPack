@@ -13,3 +13,7 @@ showdown.subParser('makehtml.unescapeSpecialChars', function (text, options, glo
   text = globals.converter._dispatch('makehtml.unescapeSpecialChars.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=unescapeSpecialChars.js.map
+
+//# sourceMappingURL=unescapeSpecialChars.js.map

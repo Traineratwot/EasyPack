@@ -16,3 +16,7 @@ showdown.subParser('makeMarkdown.image', function (node) {
   }
   return txt;
 });
+
+//# sourceMappingURL=image.js.map
+
+//# sourceMappingURL=image.js.map

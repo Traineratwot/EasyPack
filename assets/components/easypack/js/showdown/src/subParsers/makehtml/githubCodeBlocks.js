@@ -44,3 +44,7 @@ showdown.subParser('makehtml.githubCodeBlocks', function (text, options, globals
 
   return globals.converter._dispatch('makehtml.githubCodeBlocks.after', text, options, globals).getText();
 });
+
+//# sourceMappingURL=githubCodeBlocks.js.map
+
+//# sourceMappingURL=githubCodeBlocks.js.map

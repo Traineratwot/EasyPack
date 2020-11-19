@@ -15,3 +15,7 @@ if (typeof define === 'function' && define.amd) {
 } else {
   root.showdown = showdown;
 }
+
+//# sourceMappingURL=loader.js.map
+
+//# sourceMappingURL=loader.js.map

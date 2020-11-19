@@ -36,3 +36,7 @@ showdown.subParser('makehtml.codeBlocks', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.codeBlocks.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=codeBlocks.js.map
+
+//# sourceMappingURL=codeBlocks.js.map

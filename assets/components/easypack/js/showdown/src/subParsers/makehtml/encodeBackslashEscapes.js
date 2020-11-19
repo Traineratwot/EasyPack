@@ -19,3 +19,7 @@ showdown.subParser('makehtml.encodeBackslashEscapes', function (text, options, g
   text = globals.converter._dispatch('makehtml.encodeBackslashEscapes.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=encodeBackslashEscapes.js.map
+
+//# sourceMappingURL=encodeBackslashEscapes.js.map

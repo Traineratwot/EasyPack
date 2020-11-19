@@ -423,7 +423,7 @@
 			$k2 = 'setting_' . $key . '_desc';
 
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
-			$permissions = $this->modx->config['new_file_permissions'] ?: 0777;
+			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$prefix = $this->modx->config['table_prefix'];
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE name in('{$k1}','{$k2}')");
 			if ($_lang) {
@@ -461,7 +461,7 @@
 			$_lang = NULL;
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
 			$prefix = (string)$this->modx->config['table_prefix'];
-			$permissions = $this->modx->config['new_file_permissions'] ?: 0777;
+			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE `name` LIKE '%{$area}%'");
 			if ($_lang) {
 				$_lang = $_lang->fetchAll(PDO::FETCH_KEY_PAIR);

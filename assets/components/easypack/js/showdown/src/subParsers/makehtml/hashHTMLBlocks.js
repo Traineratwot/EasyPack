@@ -96,3 +96,7 @@ showdown.subParser('makehtml.hashHTMLBlocks', function (text, options, globals) 
   text = globals.converter._dispatch('makehtml.hashHTMLBlocks.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=hashHTMLBlocks.js.map
+
+//# sourceMappingURL=hashHTMLBlocks.js.map

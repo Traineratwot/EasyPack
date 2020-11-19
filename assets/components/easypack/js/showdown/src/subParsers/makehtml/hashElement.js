@@ -17,3 +17,7 @@ showdown.subParser('makehtml.hashElement', function (text, options, globals) {
     return blockText;
   };
 });
+
+//# sourceMappingURL=hashElement.js.map
+
+//# sourceMappingURL=hashElement.js.map

@@ -64,3 +64,7 @@ showdown.subParser('makehtml.italicsAndBold', function (text, options, globals) 
   text = globals.converter._dispatch('makehtml.italicsAndBold.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=italicsAndBold.js.map
+
+//# sourceMappingURL=italicsAndBold.js.map

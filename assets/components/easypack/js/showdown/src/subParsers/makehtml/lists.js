@@ -214,3 +214,7 @@ showdown.subParser('makehtml.lists', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.lists.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=lists.js.map
+
+//# sourceMappingURL=lists.js.map

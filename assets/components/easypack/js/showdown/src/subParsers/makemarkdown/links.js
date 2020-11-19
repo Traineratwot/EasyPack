@@ -18,3 +18,7 @@ showdown.subParser('makeMarkdown.links', function (node, globals) {
   }
   return txt;
 });
+
+//# sourceMappingURL=links.js.map
+
+//# sourceMappingURL=links.js.map

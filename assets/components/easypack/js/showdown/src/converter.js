@@ -600,3 +600,7 @@ showdown.Converter = function (converterOptions) {
     metadata.raw = raw;
   };
 };
+
+//# sourceMappingURL=converter.js.map
+
+//# sourceMappingURL=converter.js.map

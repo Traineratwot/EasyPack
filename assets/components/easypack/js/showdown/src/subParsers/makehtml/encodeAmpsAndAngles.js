@@ -21,3 +21,7 @@ showdown.subParser('makehtml.encodeAmpsAndAngles', function (text, options, glob
   text = globals.converter._dispatch('makehtml.encodeAmpsAndAngles.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=encodeAmpsAndAngles.js.map
+
+//# sourceMappingURL=encodeAmpsAndAngles.js.map

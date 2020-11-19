@@ -40,3 +40,7 @@ showdown.subParser('makehtml.blockQuotes', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.blockQuotes.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=blockQuotes.js.map
+
+//# sourceMappingURL=blockQuotes.js.map

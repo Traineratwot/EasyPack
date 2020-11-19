@@ -68,3 +68,7 @@ showdown.subParser('makehtml.paragraphs', function (text, options, globals) {
   text = text.replace(/\n+$/g, '');
   return globals.converter._dispatch('makehtml.paragraphs.after', text, options, globals).getText();
 });
+
+//# sourceMappingURL=paragraphs.js.map
+
+//# sourceMappingURL=paragraphs.js.map

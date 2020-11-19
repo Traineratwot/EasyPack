@@ -29,3 +29,7 @@ showdown.subParser('makeMarkdown.list', function (node, globals, type) {
 
   return txt.trim();
 });
+
+//# sourceMappingURL=list.js.map
+
+//# sourceMappingURL=list.js.map

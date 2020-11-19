@@ -9,3 +9,7 @@ showdown.subParser('makehtml.strikethrough', function (text, options, globals) {
 
   return text;
 });
+
+//# sourceMappingURL=strikethrough.js.map
+
+//# sourceMappingURL=strikethrough.js.map

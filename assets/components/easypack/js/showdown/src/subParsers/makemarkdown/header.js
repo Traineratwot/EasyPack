@@ -15,3 +15,7 @@ showdown.subParser('makeMarkdown.header', function (node, globals, headerLevel) 
   }
   return txt;
 });
+
+//# sourceMappingURL=header.js.map
+
+//# sourceMappingURL=header.js.map

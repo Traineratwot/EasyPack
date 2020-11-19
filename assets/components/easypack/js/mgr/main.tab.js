@@ -2,6 +2,13 @@ Ext.onReady(function() {
 	MODx.add({
 		xtype: 'EasyPack-panel-home'
 	})
+	setTimeout(function(){
+		document.querySelectorAll('pre code').forEach((block) => {
+			if(typeof hljs != 'undefined') {
+				hljs.highlightBlock(block)
+			}
+		})
+	},1000)
 })
 var EasyPack = function(config) {
 	config = config || {}
@@ -88,7 +95,11 @@ var htmlRenderer = function(val) {
 }
 var JSONRenderer = function(val) {
 	if(val) {
-		return cope.Highlighter.highlight(JSON.parse(val), {indent: 2, useTabs: true})
+		try {
+			return hljs.highlight('json', val)
+		} finally {
+			return `<pre><code class="language-json">${val}</code></pre>`
+		}
 	}
 	return defaultRenderer(val)
 }
@@ -1247,3 +1258,6 @@ EasyPack.combo.modComboSuper = function(config) {
 }
 Ext.extend(EasyPack.combo.modComboSuper, Ext.ux.form.SuperBoxSelect)
 Ext.reg('EasyPack-combo-modComboSuper', EasyPack.combo.modComboSuper)
+//# sourceMappingURL=main.tab.js.map
+
+//# sourceMappingURL=main.tab.js.map

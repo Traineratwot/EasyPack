@@ -30,6 +30,16 @@ Ext.onReady(function() {
 			html: `<code class="wiki" data-src="/assets/components/easypack/wiki/EasyPack.wiki/setup_options.md"></code>`,
 		}
 	)
+	Ext.getCmp('Wiki-tabs').add(
+		{
+			id: 'EasyPack.wiki.settings',
+			title: _('EasyPack.wiki.settings') || 'Настройки',
+			height: window.innerHeight,
+			width: window.innerWidth,
+			padding: '15px',
+			html: `<code class="wiki" data-src="/assets/components/easypack/wiki/EasyPack.wiki/settings.md"></code>`,
+		}
+	)
 	Ext.getCmp('Wiki-tabs').setActiveTab('EasyPack.wiki.Home')
 	loadWiki()
 })
@@ -59,7 +69,7 @@ var converter = new showdown.Converter({
 	smartIndentationFix: true,
 	openLinksInNewWindow: true,
 	emoji: true,
-	smoothPreview: '#wrap'
+	// smoothPreview: '#wrap'
 })
 
 function convert(self, response) {
@@ -69,3 +79,6 @@ function convert(self, response) {
 	})
 	return true
 }
+//# sourceMappingURL=wiki.js.map
+
+//# sourceMappingURL=wiki.js.map

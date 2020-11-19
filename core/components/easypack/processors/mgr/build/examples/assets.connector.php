@@ -7,7 +7,9 @@
 		if (!isset($modx)) {
 			$base_path = __DIR__;
 			// Ищем MODX
-			while (!file_exists($base_path . "/config.core.php")) {
+			// устанавливаем лимит на всякий случай
+			$_i = 0 
+			while (!file_exists($base_path . "/config.core.php")  and $_i < 50) {
 				$base_path = dirname($base_path);
 			}
 			if (file_exists($base_path . "/index.php")) {

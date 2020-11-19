@@ -13,3 +13,7 @@ showdown.subParser('makeMarkdown.strikethrough', function (node, globals) {
   }
   return txt;
 });
+
+//# sourceMappingURL=strikethrough.js.map
+
+//# sourceMappingURL=strikethrough.js.map

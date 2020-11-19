@@ -16,3 +16,7 @@ showdown.subParser('makehtml.hashCodeTags', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.hashCodeTags.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=hashCodeTags.js.map
+
+//# sourceMappingURL=hashCodeTags.js.map

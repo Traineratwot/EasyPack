@@ -4,8 +4,10 @@
 	if (!isset($modx)) {
 		$base_path = __DIR__;
 		// Ищем MODX
-		while (!file_exists($base_path . '/config.core.php')) {
+		$_i = 0;
+		while (!file_exists($base_path . '/config.core.php') and $_i < 50) {
 			$base_path = dirname($base_path);
+			$_i++;
 		}
 		if (file_exists($base_path . '/index.php')) {
 			ini_set('display_errors', 1);

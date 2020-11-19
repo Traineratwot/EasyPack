@@ -124,3 +124,7 @@ showdown.subParser('makehtml.headers', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.headers.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=headers.js.map
+
+//# sourceMappingURL=headers.js.map

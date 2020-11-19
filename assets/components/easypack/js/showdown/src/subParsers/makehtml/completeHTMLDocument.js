@@ -60,3 +60,7 @@ showdown.subParser('makehtml.completeHTMLDocument', function (text, options, glo
   text = globals.converter._dispatch('makehtml.completeHTMLDocument.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=completeHTMLDocument.js.map
+
+//# sourceMappingURL=completeHTMLDocument.js.map

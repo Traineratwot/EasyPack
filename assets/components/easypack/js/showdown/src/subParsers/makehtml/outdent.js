@@ -15,3 +15,7 @@ showdown.subParser('makehtml.outdent', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.outdent.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=outdent.js.map
+
+//# sourceMappingURL=outdent.js.map

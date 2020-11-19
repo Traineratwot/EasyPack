@@ -31,3 +31,7 @@ showdown.subParser('makehtml.detab', function (text, options, globals) {
   text = globals.converter._dispatch('makehtml.detab.after', text, options, globals).getText();
   return text;
 });
+
+//# sourceMappingURL=detab.js.map
+
+//# sourceMappingURL=detab.js.map
