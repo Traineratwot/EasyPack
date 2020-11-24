@@ -65,6 +65,6 @@ showdown.subParser('makehtml.italicsAndBold', function (text, options, globals) 
   return text;
 });
 
-//# sourceMappingURL=italicsAndBold.js.map
 
-//# sourceMappingURL=italicsAndBold.js.map
+
+

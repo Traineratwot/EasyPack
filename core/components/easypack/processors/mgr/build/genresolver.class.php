@@ -20,8 +20,7 @@
 			$this->PKG_NAME_LOWER = str_replace([' ', '-', '.', '*', '!', '@', '#', '$', '%', '^', '&', '_'], '', mb_strtolower($this->PKG_NAME));
 			$this->modelPath = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/model/';
 
-			$txt = $this->_GenResolver();
-			$txt = "<div class='ResolverArea'><textarea >".$txt."</textarea></div>";
+			$txt = $this->_GenResolver();;
 			return $this->success($txt);
 		}
 

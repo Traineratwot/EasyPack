@@ -26,6 +26,6 @@ showdown.subParser('makehtml.emoji', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=emoji.js.map
 
-//# sourceMappingURL=emoji.js.map
+
+

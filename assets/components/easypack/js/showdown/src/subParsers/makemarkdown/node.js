@@ -123,6 +123,6 @@ showdown.subParser('makeMarkdown.node', function (node, globals, spansOnly) {
   return txt;
 });
 
-//# sourceMappingURL=node.js.map
 
-//# sourceMappingURL=node.js.map
+
+

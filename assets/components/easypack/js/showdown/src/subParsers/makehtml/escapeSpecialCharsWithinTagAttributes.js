@@ -25,6 +25,6 @@ showdown.subParser('makehtml.escapeSpecialCharsWithinTagAttributes', function (t
   return text;
 });
 
-//# sourceMappingURL=escapeSpecialCharsWithinTagAttributes.js.map
 
-//# sourceMappingURL=escapeSpecialCharsWithinTagAttributes.js.map
+
+

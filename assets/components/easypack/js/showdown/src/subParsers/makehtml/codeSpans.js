@@ -47,6 +47,6 @@ showdown.subParser('makehtml.codeSpans', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=codeSpans.js.map
 
-//# sourceMappingURL=codeSpans.js.map
+
+

@@ -57,6 +57,6 @@ showdown.subParser('makehtml.unhashHTMLSpans', function (text, options, globals)
   return text;
 });
 
-//# sourceMappingURL=hashHTMLSpans.js.map
 
-//# sourceMappingURL=hashHTMLSpans.js.map
+
+

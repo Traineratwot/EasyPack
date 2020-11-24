@@ -42,6 +42,6 @@ showdown.subParser('makeMarkdown.txt', function (node) {
   return txt;
 });
 
-//# sourceMappingURL=txt.js.map
 
-//# sourceMappingURL=txt.js.map
+
+

@@ -19,6 +19,6 @@ showdown.subParser('makehtml.runExtension', function (ext, text, options, global
   return text;
 });
 
-//# sourceMappingURL=runExtension.js.map
 
-//# sourceMappingURL=runExtension.js.map
+
+

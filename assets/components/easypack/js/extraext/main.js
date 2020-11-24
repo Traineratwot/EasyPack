@@ -2,13 +2,6 @@ Ext.onReady(function() {
 	MODx.add({
 		xtype: 'EasyPack-panel-home'
 	})
-	setTimeout(function(){
-		document.querySelectorAll('pre code').forEach((block) => {
-			if(typeof hljs != 'undefined') {
-				hljs.highlightBlock(block)
-			}
-		})
-	},1000)
 })
 var EasyPack = function(config) {
 	config = config || {}
@@ -16,48 +9,10 @@ var EasyPack = function(config) {
 }
 Ext.extend(EasyPack, MODx.Component, { // Перечисляем группы, внутрь которых будем "складывать" объекты
 	panel: {},
-	page: {},
 	window: {},
-	grid: {},
-	tree: {},
-	combo: {},
-	config: {},
-	view: {},
-	utils: {}
 })
 Ext.reg('EasyPack', EasyPack)
 EasyPack = new EasyPack()
-
-var entityMap = {
-	'&': '&amp;',
-	'<': '&lt;',
-	'>': '&gt;',
-	'"': '&quot;',
-	'\'': '&#39;',
-	'/': '&#x2F;',
-	'`': '&#x60;',
-	'=': '&#x3D;'
-}
-var ToolTip = {
-	render: function(e) {
-		if(e.toolTip && e.getEl()) {
-			Ext.QuickTips.register({
-				target: e.getEl(),
-				text: e.toolTip
-			})
-		}
-	}
-}
-
-function escapeHtml(string) {
-	return String(string).replace(/[&<>"'`=\/]/g, function(s) {
-		return entityMap[s]
-	})
-}
-
-var defaultRenderer = function(val) {
-	return val || '<span class="false">' + _('ext_emptygroup') + '<span>'
-}
 var elemTemplate = new Ext.XTemplate('<tpl for=".">\
 						<div class="x-combo-list-item">\
 							<tpl if="id">({id})</tpl>\
@@ -90,18 +45,15 @@ var elemTemplate6 = new Ext.XTemplate('<tpl for=".">\
 							<strong>({id}) {pagetitle}</strong><small>({uri})</small>\
 						</div>\
 					</tpl>', {compiled: true})
-var htmlRenderer = function(val) {
-	return '<code> ' + escapeHtml(defaultRenderer(val)) + ' </code>'
-}
-var JSONRenderer = function(val) {
-	if(val) {
-		try {
-			return hljs.highlight('json', val)
-		} finally {
-			return `<pre><code class="language-json">${val}</code></pre>`
+var ToolTip = {
+	render: function(e) {
+		if(e.toolTip && e.getEl()) {
+			Ext.QuickTips.register({
+				target: e.getEl(),
+				text: e.toolTip
+			})
 		}
 	}
-	return defaultRenderer(val)
 }
 var todata = function(str, key = 'name') {
 	if(str) {
@@ -118,8 +70,6 @@ var todata = function(str, key = 'name') {
 	}
 	return null
 }
-
-//основной блок
 EasyPack.panel.Home = function(config) {
 	config = config || {}
 	var columns = [ // Добавляем ширину и заголовок столбца
@@ -128,21 +78,32 @@ EasyPack.panel.Home = function(config) {
 			width: 200,
 			header: _('id'),
 			sortable: true,
-			renderer: defaultRenderer
+			extraExtEditor: {
+				visible: false,
+			},
+			renderer: extraExt.grid.renderers.default
 		},
 		{
 			dataIndex: 'name',
 			width: 330,
 			header: _('name'),
 			sortable: true,
-			renderer: function(val, e, b) {
-				if(b.data.path_to_last_transport) {
-					return `<a href="${b.data.path_to_last_transport}" title="${_('EasyPack.path_to_last_transport')}">${val}</a>`
-				} else {
-					return `${val}`
-				}
+			extraExtRenderer: {
+				preRenderer: function(val, e, b) {
+					if(b.data.path_to_last_transport) {
+						return `<a href="${b.data.path_to_last_transport}" title="${_('EasyPack.path_to_last_transport')}">${val}</a>`
+					} else {
+						return `${val}`
+					}
+				},
 			},
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: 'textfield',
+				fieldLabel: _('name'),
+				allowBlank: false,
+			},
 		},
 		{
 			dataIndex: 'version',
@@ -150,9 +111,16 @@ EasyPack.panel.Home = function(config) {
 			header: _('version'),
 			emptyText: '0.0.1-pl',
 			sortable: true,
+			extraExtEditor: {},
 			tooltip: _('EasyPack.description.version'),
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: 'textfield',
+				fieldLabel: _('version'),
+				emptyText: '0.0.1-pl',
+				allowBlank: false
+			},
 		},
 
 		{
@@ -161,8 +129,12 @@ EasyPack.panel.Home = function(config) {
 			tooltip: _('EasyPack.description.date'),
 			header: _('date'),
 			sortable: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			extraExtEditor: {
+				visible: false,
+			},
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 
 		{
@@ -171,8 +143,29 @@ EasyPack.panel.Home = function(config) {
 			header: _('chunks'),
 			tooltip: _('EasyPack.description.chunks'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('chunk'),
+				name: 'chunks',
+				id: 'add-' + this.ident + '-chunk',
+				anchor: '99%',
+				forceSelection: true,
+				fields: ['id', 'name', 'category_name'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'element/chunk/getlist', combo: 1, sort: 'id',
+					dir: 'DESK',
+				},
+				allowBlank: true,
+				valueField: 'name',
+				displayField: 'name',
+				tpl: elemTemplate
+			},
 		},
 		{
 			dataIndex: 'snippets',
@@ -180,8 +173,26 @@ EasyPack.panel.Home = function(config) {
 			header: _('snippets'),
 			tooltip: _('EasyPack.description.snippets'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('snippet'),
+				forceSelection: true,
+				fields: ['id', 'name', 'category_name'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'element/snippet/getlist', combo: 1, sort: 'id',
+					dir: 'DESK',
+				},
+				allowBlank: true,
+				valueField: 'name',
+				displayField: 'name',
+				tpl: elemTemplate
+			},
 		},
 		{
 			dataIndex: 'plugins',
@@ -189,8 +200,26 @@ EasyPack.panel.Home = function(config) {
 			header: _('plugins'),
 			tooltip: _('EasyPack.description.plugins'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('plugin'),
+				forceSelection: true,
+				fields: ['id', 'name', 'category_name'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'element/plugin/getlist', combo: 1, sort: 'id',
+					dir: 'DESK'
+				},
+				allowBlank: true,
+				valueField: 'name',
+				displayField: 'name',
+				tpl: elemTemplate
+			},
 		},
 		{
 			dataIndex: 'templates',
@@ -198,8 +227,26 @@ EasyPack.panel.Home = function(config) {
 			header: _('templates'),
 			tooltip: _('EasyPack.description.templates'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('template'),
+				forceSelection: true,
+				fields: ['id', 'templatename', 'category_name'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'element/template/getlist', combo: 1, sort: 'id',
+					dir: 'DESK',
+				},
+				allowBlank: true,
+				valueField: 'templatename',
+				displayField: 'templatename',
+				tpl: elemTemplate2
+			},
 		},
 		{
 			dataIndex: 'resources',
@@ -207,8 +254,26 @@ EasyPack.panel.Home = function(config) {
 			header: _('resources'),
 			tooltip: _('EasyPack.description.resources'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('resources'),
+				forceSelection: true,
+				fields: ['id', 'pagetitle', 'uri'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'resource/getlist', combo: 1, sort: 'id',
+					dir: 'DESK',
+				},
+				allowBlank: true,
+				valueField: 'id',
+				displayField: 'id',
+				tpl: elemTemplate6
+			},
 		},
 		{
 			dataIndex: 'menus',
@@ -216,8 +281,26 @@ EasyPack.panel.Home = function(config) {
 			header: _('edit_menu'),
 			tooltip: _('EasyPack.description.menus'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('edit_menu'),
+				forceSelection: true,
+				fields: ['text', 'text_lex', 'parent', 'namespace'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'system/menu/getlist', combo: 1, sort: 'namespace',
+					dir: 'DESK',
+				},
+				allowBlank: true,
+				valueField: 'text',
+				displayField: 'text',
+				tpl: elemTemplate3
+			},
 		},
 		{
 			dataIndex: 'settings',
@@ -225,8 +308,27 @@ EasyPack.panel.Home = function(config) {
 			header: _('settings'),
 			tooltip: _('EasyPack.description.settings'),
 			sortable: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {
+				xtype: extraExt.inputs.modComboSuper.xtype,
+				fieldLabel: _('settings'),
+				forceSelection: true,
+				fields: ['key', 'name_trans', 'namespace'],
+				url: MODx.config.connector_url,
+				baseParams: {
+					action: 'system/settings/getlist', combo: 1,
+					sort: 'namespace',
+					dir: 'ASC',
+				},
+				allowBlank: true,
+				valueField: 'key',
+				displayField: 'key',
+				tpl: elemTemplate4
+			},
 		},
 
 		{
@@ -235,9 +337,10 @@ EasyPack.panel.Home = function(config) {
 			header: _('EasyPack.core'),
 			tooltip: _('EasyPack.description.core'),
 			sortable: true,
-			renderer: defaultRenderer,
+			renderer: extraExt.grid.renderers.default,
 			hidden: true,
-			editor: {xtype: 'textfield'}
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 		{
 			dataIndex: 'assets',
@@ -246,8 +349,9 @@ EasyPack.panel.Home = function(config) {
 			tooltip: _('EasyPack.description.assets'),
 			sortable: true,
 			hidden: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 
 		{
@@ -257,8 +361,12 @@ EasyPack.panel.Home = function(config) {
 			tooltip: _('EasyPack.description.requires'),
 			sortable: true,
 			hidden: false,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textarea'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textarea'},
+			extraExtEditor: {},
 		},
 		{
 			dataIndex: 'readme',
@@ -267,8 +375,9 @@ EasyPack.panel.Home = function(config) {
 			header: _('EasyPack.readme'),
 			sortable: true,
 			hidden: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 		{
 			dataIndex: 'changelog',
@@ -277,8 +386,9 @@ EasyPack.panel.Home = function(config) {
 			header: _('EasyPack.changelog'),
 			sortable: true,
 			hidden: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 
 		{
@@ -288,8 +398,12 @@ EasyPack.panel.Home = function(config) {
 			tooltip: _('EasyPack.description.tables'),
 			sortable: true,
 			hidden: true,
-			renderer: JSONRenderer,
-			editor: {xtype: 'textarea'}
+			renderer: extraExt.grid.renderers.JSON,
+			extraExtRenderer: {
+				popup: true,
+			},
+			editor: {xtype: 'textarea'},
+			extraExtEditor: {},
 		},
 
 		{
@@ -298,8 +412,9 @@ EasyPack.panel.Home = function(config) {
 			header: _('EasyPack.setup_option'),
 			tooltip: _('EasyPack.description.setup_option'),
 			sortable: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 		{
 			dataIndex: 'php_resolver',
@@ -307,8 +422,9 @@ EasyPack.panel.Home = function(config) {
 			tooltip: _('EasyPack.description.php_resolver'),
 			header: _('EasyPack.php_resolver'),
 			sortable: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 		{
 			dataIndex: 'license',
@@ -317,8 +433,9 @@ EasyPack.panel.Home = function(config) {
 			header: _('EasyPack.license'),
 			sortable: true,
 			hidden: true,
-			renderer: defaultRenderer,
-			editor: {xtype: 'textfield'}
+			renderer: extraExt.grid.renderers.default,
+			editor: {xtype: 'textfield'},
+			extraExtEditor: {},
 		},
 	]
 	if(modUtil) {
@@ -330,18 +447,21 @@ EasyPack.panel.Home = function(config) {
 				header: _('EasyPack.modUtilitiesRest'),
 				sortable: true,
 				hidden: true,
-				renderer: JSONRenderer,
-				editor: {xtype: 'textfield'}
+				renderer: extraExt.grid.renderers.JSON,
+				extraExtRenderer: {
+					popup: true,
+				},
+				editor: {xtype: 'textfield'},
 			}
 		)
 	}
 	var app = {
 		cls: 'container', // Добавляем отступы
 		items: [{
-			html: ' <h2>' + _('EasyPack') + ' <small style="font-size: 10px"><a href="https://forms.gle/E9hZht9RthdcX6Ur7" target="_blank">Bug report</a></small></h2><br><small style="color: red">deprecated interface, please install <strong><a>ExtraExt</a></strong> </small>',
+			html: ' <h2>' + _('EasyPack') + ' <small style="font-size: 10px"><a href="https://forms.gle/E9hZht9RthdcX6Ur7" target="_blank">Bug report</a></small></h2>',
 		},
 			{
-				xtype: 'modx-tabs',
+				xtype: extraExt.tabs.xtype,
 				deferredRender: false,
 				border: true,
 				items: [
@@ -349,7 +469,9 @@ EasyPack.panel.Home = function(config) {
 						title: _('EasyPack.Packages'),
 						items: [{
 							id: 'EasyPack-main-table',
-							xtype: 'EasyPack-grid',
+							name: _('EasyPack.Package'),
+							xtype: extraExt.grid.xtype,
+							extraEditor: 'EasyPack-window-add',
 							columns: columns,
 							fields: [
 								'id',
@@ -375,33 +497,19 @@ EasyPack.panel.Home = function(config) {
 								'path_to_last_transport',
 								'modUtilitiesRest',
 							],
-							tbar: [{
-								xtype: 'button', // Перемещаем сюда нашу кнопку
-								text: _('EasyPack.create_new_package'),
-								cls: 'primary-button',
-								handler: function() {
-									MODx.load({
-										xtype: 'EasyPack-window-add',
-									}).show()
-								},
-							}],
+							autosave: true,
+							nameField: 'name',
+							url: easypackConnectorUrl,
+							extraExtSearch: true,
+							extraExtUpdate: true,
+							extraExtCreate: true,
+							extraExtDelete: true,
+							requestDataType: 'form',
 							action: 'mgr/get',
 							save_action: 'mgr/update',
-							autosave: true,
-							getMenu: function(grid, rowIndex) {
-								var m = []
-								m.push({
-									text: _('delete'),
-									grid: grid,
-									rowIndex: rowIndex,
-									handler: this.del
-								})
-								m.push({
-									text: _('update'),
-									grid: grid,
-									rowIndex: rowIndex,
-									handler: this.update
-								})
+							create_action: 'mgr/create',
+							delete_action: 'mgr/del',
+							addMenu: function(m, grid, rowIndex) {
 								m.push({
 									text: _('EasyPack.create_structure'),
 									grid: grid,
@@ -428,14 +536,13 @@ EasyPack.panel.Home = function(config) {
 								// })
 								return m
 							},
-
 							del: function() {
 								var cs = this.getSelectedAsList()
 								var self = this
 								MODx.msg.confirm({
 									title: _('delete'),
 									text: _('confirm_remove'),
-									url: EasyPackConnector_url,
+									url: easypackConnectorUrl,
 									params: {
 										action: 'mgr/del',
 										id: cs,
@@ -468,7 +575,7 @@ EasyPack.panel.Home = function(config) {
 								MODx.msg.confirm({
 									title: _('create'),
 									text: _('confirm'),
-									url: EasyPackConnector_url,
+									url: easypackConnectorUrl,
 									params: {
 										action: 'mgr/build/build',
 										id: cs,
@@ -528,7 +635,7 @@ EasyPack.panel.Home = function(config) {
 								MODx.msg.confirm({
 									title: _('create'),
 									text: _('confirm'),
-									url: EasyPackConnector_url,
+									url: easypackConnectorUrl,
 									params: {
 										action: 'mgr/build/testPack',
 										id: cs,
@@ -557,7 +664,7 @@ EasyPack.panel.Home = function(config) {
 								MODx.msg.confirm({
 									title: _('create'),
 									text: _('confirm'),
-									url: EasyPackConnector_url,
+									url: easypackConnectorUrl,
 									params: {
 										action: 'mgr/build/genresolver',
 										id: cs,
@@ -565,13 +672,12 @@ EasyPack.panel.Home = function(config) {
 									listeners: {
 										'success': {
 											fn: function(r) {
-												Ext.MessageBox.show({
+												extraExt.util.renderer.openPopup({
 													title: config.title || '',
 													msg: r.message || '',
-													width: window.innerWidth / 100 * 50,
-													height: window.innerHeight / 100 * 50,
 													buttons: Ext.MessageBox.CANCEL,
-													icon: Ext.MessageBox.QUESTION
+													icon: Ext.MessageBox.QUESTION,
+													type: 'php'
 												})
 												self.refresh()
 											}, scope: true
@@ -584,13 +690,11 @@ EasyPack.panel.Home = function(config) {
 					},
 					{
 						title: 'Wiki',
-						id:'Wiki-tabs',
-						xtype: 'modx-tabs',
+						id: 'Wiki-tabs',
+						xtype: extraExt.tabs.xtype,
 						deferredRender: false,
 						border: true,
-						items: [
-
-						]
+						items: []
 
 					}
 				]
@@ -601,75 +705,11 @@ EasyPack.panel.Home = function(config) {
 	Ext.apply(config, app)
 	EasyPack.panel.Home.superclass.constructor.call(this, config) // Чёртова магия =)
 }
-
 Ext.extend(EasyPack.panel.Home, MODx.Panel)
 Ext.reg('EasyPack-panel-home', EasyPack.panel.Home)
 
-EasyPack.grid.ModGrid = function(config) { // Придумываем название, например, «Names»
-	config = config || {}
-	Ext.apply(config, {
-		// Сюда перемещаем все свойства нашей таблички
-		paging: true,
-		autoHeight: true,
-		viewConfig: {
-			forceFit: true,
-			scrollOffset: 0
-		},
-		remoteSort: true,
-		url: EasyPackConnector_url,
-		keyField: 'id',
-		getSelectedAsList: function() {
-			var selects = this.getSelectionModel().getSelections()
-			if(selects.length <= 0) return false
-			var cs = ''
-			for(var i = 0; i < selects.length; i++) {
-				cs += ',' + selects[i].data[this.keyField]
-			}
-			cs = cs.substr(1)
-			return cs
-		}
-	})
-	EasyPack.grid.ModGrid.superclass.constructor.call(this, config) // Магия
-}
-Ext.extend(EasyPack.grid.ModGrid, MODx.grid.Grid) // Наша табличка расширяет GridPanel
-Ext.reg('EasyPack-grid', EasyPack.grid.ModGrid) // Регистрируем новый xtype
-
-EasyPack.window.modWindow = function(config) {
-	config = config || {}
-	Ext.applyIf(config, {
-		title: 'Create thing',
-		width: window.innerWidth / 100 * 50,
-		saveBtnText: 'Сохранить 💾',
-		url: EasyPackConnector_url,
-	})
-	EasyPack.window.modWindow.superclass.constructor.call(this, config) // Магия
-}
-Ext.extend(EasyPack.window.modWindow, MODx.Window) // Расширяем MODX.Window
-Ext.reg('EasyPack-window-modWindow', EasyPack.window.modWindow) // Регистрируем новый xtype
-//добавление EasyPack
-
 //окно редактора
 EasyPack.window.add = function(config) {
-	config.updateData = Object.assign({
-		'id': null,
-		'name': null,
-		'version': null,
-		'date': null,
-		'chunks': null,
-		'snippets': null,
-		'plugins': null,
-		'templates': null,
-		'resources': null,
-		'menus': null,
-		'core': null,
-		'assets': null,
-		'readme': null,
-		'changelog': null,
-		'setup_option': null,
-		'license': null,
-		'tables': null,
-		'modUtilitiesRest': null,
-	}, config.updateData)
 	config.tables = function(key) {
 		if(config.updateData.tables) {
 			var data = JSON.parse(config.updateData.tables)
@@ -682,14 +722,13 @@ EasyPack.window.add = function(config) {
 					break
 			}
 		}
-	},
-		this.ident = config.ident || 'EasyPack' + Ext.id()
+	}
 	var fields = [
 		{
 			xtype: 'hidden',
 			name: 'id',
 			id: 'add-' + this.ident + '-id',
-			value: config.updateId || null,
+			value: config.updateData.id || null,
 			allowBlank: true
 		},
 		{
@@ -713,7 +752,7 @@ EasyPack.window.add = function(config) {
 		},
 
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('chunk'),
 			name: 'chunks',
 			id: 'add-' + this.ident + '-chunk',
@@ -732,7 +771,7 @@ EasyPack.window.add = function(config) {
 			tpl: elemTemplate
 		},
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('snippet'),
 			name: 'snippets',
 			id: 'add-' + this.ident + '-snippet',
@@ -751,7 +790,7 @@ EasyPack.window.add = function(config) {
 			tpl: elemTemplate
 		},
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('plugin'),
 			name: 'plugins',
 			id: 'add-' + this.ident + '-plugin',
@@ -770,7 +809,7 @@ EasyPack.window.add = function(config) {
 			tpl: elemTemplate
 		},
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('template'),
 			name: 'templates',
 			id: 'add-' + this.ident + '-template',
@@ -789,7 +828,7 @@ EasyPack.window.add = function(config) {
 			tpl: elemTemplate2
 		},
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('resources'),
 			name: 'resources',
 			id: 'add-' + this.ident + '-resources',
@@ -808,7 +847,7 @@ EasyPack.window.add = function(config) {
 			tpl: elemTemplate6
 		},
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('edit_menu'),
 			name: 'menus',
 			id: 'add-' + this.ident + '-menu',
@@ -827,7 +866,7 @@ EasyPack.window.add = function(config) {
 			tpl: elemTemplate3
 		},
 		{
-			xtype: 'EasyPack-combo-modComboSuper',
+			xtype: extraExt.inputs.modComboSuper.xtype,
 			fieldLabel: _('settings'),
 			name: 'settings',
 			id: 'add-' + this.ident + '-setting',
@@ -985,7 +1024,7 @@ EasyPack.window.add = function(config) {
 	if(modUtil) {
 		fields.push(
 			{
-				xtype: 'EasyPack-combo-modComboSuper',
+				xtype: extraExt.inputs.modComboSuper.xtype,
 				fieldLabel: _('EasyPack.modUtilitiesRest'),
 				name: 'modUtilitiesRest',
 				id: 'add-' + this.ident + '-modUtilitiesRest',
@@ -995,7 +1034,7 @@ EasyPack.window.add = function(config) {
 				fields: ['id', 'url', 'snippet'],
 				url: modUtilConnector_url,
 				baseParams: {
-					action: 'mgr/rest/getRest', combo: 1, sort: 'id',
+					action: 'mgr/rest/rest/get', combo: 1, sort: 'id',
 					dir: 'DESK',
 				},
 				allowBlank: true,
@@ -1005,62 +1044,30 @@ EasyPack.window.add = function(config) {
 			},
 		)
 	}
-
-	Ext.applyIf(config, {
-		title: _('EasyPack.create_new_pack'),
-		fields: fields,
-		action: 'mgr/create',
-		listeners: {
-			beforeSubmit: function(a) {
-				// if(typeof a.allowMethod !== 'string' && a.allowMethod) {
-				// 	var allowMethod = a.allowMethod.join()
-				// 	if(typeof allowMethod == 'string') {
-				// 		$(`input[name="allowMethod"]`).each(function() {
-				// 			$(this).val(allowMethod)
-				// 			$(this).attr('value', allowMethod)
-				// 			this.value = allowMethod
-				// 		})
-				// 	}
-				// }
-				return true
-			},
-			success: function() {
-				MODx.msg.status({
-					title: _('created'),
-					message: 'Готово',
-					delay: 3
-				})
-				Ext.getCmp('EasyPack-main-table').refresh()
-				this.remove()
-			},
-			failure: function() {
-				this.remove()
-			}
-		}
-	})
+	config.fields = fields
 	EasyPack.window.add.superclass.constructor.call(this, config) // Магия
 }
-Ext.extend(EasyPack.window.add, EasyPack.window.modWindow) // Расширяем MODX.Window
+Ext.extend(EasyPack.window.add, extraExt.xTypes[extraExt.grid.editor.xtype]) // Расширяем MODX.Window
 Ext.reg('EasyPack-window-add', EasyPack.window.add) // Регистрируем новый xtype
 //добавление категории
 
 //окно редактора2
 EasyPack.window.create = function(config) {
 	config.updateData = Object.assign({
-		'name': null,
+		'name': '',
 	}, config.updateData)
-	saveBtnText: _('EasyPack.create'),
-		this.ident = config.ident || 'EasyPack' + Ext.id()
 	config.updateData.name_lower = config.updateData.name.toLowerCase()
+	this.ident = config.ident || 'EasyPack' + Ext.id()
+	this.saveBtnText = _('EasyPack.create'),
+		this.title = _('EasyPack.create_structure') + ' - ' + config.updateData.name
 	var self = this
 	Ext.applyIf(config, {
 		id: 'EasyPack-window-' + this.ident + '-create',
-		title: _('EasyPack.create_structure') + ' - ' + config.updateData.name,
 		fields: [
 			{
 				xtype: 'hidden',
 				name: 'id',
-				value: config.updateId || null,
+				value: config.updateData.id || null,
 				allowBlank: true
 			},
 			{
@@ -1070,56 +1077,64 @@ EasyPack.window.create = function(config) {
 				boxLabel: _('_js_mgr_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__controllers_mgr_',
 				id: 'add-' + this.ident + '-create__controllers_mgr_',
 				boxLabel: _('_controllers_mgr_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__docs_',
 				id: 'add-' + this.ident + '-create__docs_',
 				boxLabel: _('_docs_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__elements_chunks_',
 				id: 'add-' + this.ident + '-create__elements_chunks_',
 				boxLabel: _('_elements_chunks_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__elements_plugins_',
 				id: 'add-' + this.ident + '-create__elements_plugins_',
 				boxLabel: _('_elements_plugins_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__elements_snippets_',
 				id: 'add-' + this.ident + '-create__elements_snippets_',
 				boxLabel: _('_elements_snippets_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__elements_templates_',
 				id: 'add-' + this.ident + '-create__elements_templates_',
 				boxLabel: _('_elements_templates_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__lexicon_en_',
 				id: 'add-' + this.ident + '-create__lexicon_en_',
 				boxLabel: _('_lexicon_en_', {name: config.updateData.name_lower}),
 				originalValue: true,
 
-			}, {
+			},
+			{
 				xtype: 'xcheckbox',
 				name: 'create__processors_',
 				id: 'add-' + this.ident + '-create__processors_',
@@ -1152,6 +1167,7 @@ EasyPack.window.create = function(config) {
 		],
 		saveBtnText: _('EasyPack.create') + ' 🗂',
 		action: 'mgr/build/create',
+		url: easypackConnectorUrl,
 		bbar: [
 			{
 				text: _('EasyPack.Select_All'),
@@ -1193,71 +1209,6 @@ EasyPack.window.create = function(config) {
 	})
 	EasyPack.window.create.superclass.constructor.call(this, config) // Магия
 }
-Ext.extend(EasyPack.window.create, EasyPack.window.modWindow) // Расширяем MODX.Window
+Ext.extend(EasyPack.window.create, extraExt.xTypes[extraExt.window.xtype]) // Расширяем MODX.Window
 Ext.reg('EasyPack-window-create', EasyPack.window.create) // Регистрируем новый xtype
 //добавление категории
-
-EasyPack.combo.modCombo = function(config) {
-	config = config || {}
-	this.ident = config.ident || 'mecnewsletter' + Ext.id()
-	Ext.applyIf(config, {
-		url: EasyPackConnector_url,
-		valueField: 'id',
-		width: '100%',
-		anchor: '99%',
-		editable: true,
-		pageSize: 20,
-		preventRender: true,
-		forceSelection: true,
-		enableKeyEvents: true,
-	})
-	EasyPack.combo.modCombo.superclass.constructor.call(this, config) // Магия
-}
-Ext.extend(EasyPack.combo.modCombo, MODx.combo.ComboBox) // Расширяем MODX.ComboBox
-Ext.reg('EasyPack-combo-modCombo', EasyPack.combo.modCombo) // Регистрируем новый xtype
-
-EasyPack.combo.modComboSuper = function(config) {
-	config = config || {}
-	Ext.applyIf(config, {
-		xtype: 'superboxselect'
-		, allowBlank: true
-		, msgTarget: 'under'
-		, allowAddNewData: true
-		, addNewDataOnBlur: true
-		, width: '100%'
-		, editable: true
-		, pageSize: 20
-		, preventRender: true
-		, forceSelection: true
-		, enableKeyEvents: true
-		, minChars: 2
-		, hiddenName: config.name + '[]'
-		, store: new Ext.data.JsonStore({
-			id: (config.name || 'tags') + '-store'
-			, root: 'results'
-			, autoLoad: true
-			, autoSave: false
-			, totalProperty: 'total'
-			, fields: config.fields
-			, url: config.url || EasyPackConnector_url
-			, baseParams: config.baseParams
-		})
-		, mode: 'remote'
-		, displayField: 'value'
-		, valueField: 'value'
-		, triggerAction: 'all'
-		, extraItemCls: 'x-tag'
-		, expandBtnCls: 'x-form-trigger'
-		, clearBtnCls: 'x-form-trigger'
-		, listeners: {
-			newitem: function(config, v, f) {bs.addItem({tag: v})}
-		}
-		, renderTo: Ext.getBody()
-	})
-	EasyPack.combo.modComboSuper.superclass.constructor.call(this, config)
-}
-Ext.extend(EasyPack.combo.modComboSuper, Ext.ux.form.SuperBoxSelect)
-Ext.reg('EasyPack-combo-modComboSuper', EasyPack.combo.modComboSuper)
-
-
-

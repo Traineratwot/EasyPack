@@ -4,6 +4,6 @@ showdown.subParser('makeMarkdown.hr', function () {
   return '---';
 });
 
-//# sourceMappingURL=hr.js.map
 
-//# sourceMappingURL=hr.js.map
+
+

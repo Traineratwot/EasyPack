@@ -20,6 +20,6 @@ showdown.subParser('makehtml.encodeBackslashEscapes', function (text, options, g
   return text;
 });
 
-//# sourceMappingURL=encodeBackslashEscapes.js.map
 
-//# sourceMappingURL=encodeBackslashEscapes.js.map
+
+

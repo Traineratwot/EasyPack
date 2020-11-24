@@ -1,1 +1,1 @@
-{"version":3,"names":[],"mappings":"","sources":["assets/components/easypack/js/showdown/src/subParsers/makemarkdown/hr.js"],"sourcesContent":["showdown.subParser('makeMarkdown.hr', function () {\n  'use strict';\n\n  return '---';\n});\n\n//# sourceMappingURL=hr.js.map\n"],"file":"hr.js"}
+{"version":3,"names":[],"mappings":"","sources":["assets/components/easypack/js/showdown/src/subParsers/makemarkdown/hr.js"],"sourcesContent":["showdown.subParser('makeMarkdown.hr', function () {\n  'use strict';\n\n  return '---';\n});\n\n\n"],"file":"hr.js"}

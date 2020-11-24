@@ -44,6 +44,6 @@ if (argv.help) {
 }
 process.exit(0);
 
-//# sourceMappingURL=cli.js.map
 
-//# sourceMappingURL=cli.js.map
+
+

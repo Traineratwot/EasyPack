@@ -49,6 +49,6 @@ showdown.subParser('makehtml.spanGamut', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=spanGamut.js.map
 
-//# sourceMappingURL=spanGamut.js.map
+
+

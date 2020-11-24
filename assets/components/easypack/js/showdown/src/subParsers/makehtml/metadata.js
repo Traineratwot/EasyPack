@@ -48,6 +48,6 @@ showdown.subParser('makehtml.metadata', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=metadata.js.map
 
-//# sourceMappingURL=metadata.js.map
+
+

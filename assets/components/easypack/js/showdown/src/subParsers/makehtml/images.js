@@ -103,6 +103,6 @@ showdown.subParser('makehtml.images', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=images.js.map
 
-//# sourceMappingURL=images.js.map
+
+

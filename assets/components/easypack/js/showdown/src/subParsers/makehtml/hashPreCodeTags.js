@@ -18,6 +18,6 @@ showdown.subParser('makehtml.hashPreCodeTags', function (text, options, globals)
   return text;
 });
 
-//# sourceMappingURL=hashPreCodeTags.js.map
 
-//# sourceMappingURL=hashPreCodeTags.js.map
+
+

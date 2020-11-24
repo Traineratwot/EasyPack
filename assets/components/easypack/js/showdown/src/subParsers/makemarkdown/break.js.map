@@ -1,1 +1,1 @@
-{"version":3,"names":[],"mappings":"","sources":["assets/components/easypack/js/showdown/src/subParsers/makemarkdown/break.js"],"sourcesContent":["showdown.subParser('makeMarkdown.break', function () {\n  'use strict';\n\n  return '  \\n';\n});\n\n//# sourceMappingURL=break.js.map\n"],"file":"break.js"}
+{"version":3,"names":[],"mappings":"","sources":["assets/components/easypack/js/showdown/src/subParsers/makemarkdown/break.js"],"sourcesContent":["showdown.subParser('makeMarkdown.break', function () {\n  'use strict';\n\n  return '  \\n';\n});\n\n\n"],"file":"break.js"}

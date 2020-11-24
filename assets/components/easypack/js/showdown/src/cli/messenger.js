@@ -39,6 +39,6 @@ function Messenger (writeMode, supress, mute) {
 
 module.exports = Messenger;
 
-//# sourceMappingURL=messenger.js.map
 
-//# sourceMappingURL=messenger.js.map
+
+

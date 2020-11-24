@@ -21,6 +21,6 @@ showdown.subParser('makeMarkdown.blockquote', function (node, globals) {
   return txt;
 });
 
-//# sourceMappingURL=blockquote.js.map
 
-//# sourceMappingURL=blockquote.js.map
+
+

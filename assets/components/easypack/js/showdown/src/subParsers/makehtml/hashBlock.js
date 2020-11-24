@@ -7,6 +7,6 @@ showdown.subParser('makehtml.hashBlock', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=hashBlock.js.map
 
-//# sourceMappingURL=hashBlock.js.map
+
+

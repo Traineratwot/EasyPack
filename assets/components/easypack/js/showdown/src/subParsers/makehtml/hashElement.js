@@ -18,6 +18,6 @@ showdown.subParser('makehtml.hashElement', function (text, options, globals) {
   };
 });
 
-//# sourceMappingURL=hashElement.js.map
 
-//# sourceMappingURL=hashElement.js.map
+
+

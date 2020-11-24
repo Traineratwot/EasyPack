@@ -52,6 +52,6 @@ showdown.subParser('makehtml.stripLinkDefinitions', function (text, options, glo
   return text;
 });
 
-//# sourceMappingURL=stripLinkDefinitions.js.map
 
-//# sourceMappingURL=stripLinkDefinitions.js.map
+
+

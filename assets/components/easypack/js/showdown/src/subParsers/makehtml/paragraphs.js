@@ -69,6 +69,6 @@ showdown.subParser('makehtml.paragraphs', function (text, options, globals) {
   return globals.converter._dispatch('makehtml.paragraphs.after', text, options, globals).getText();
 });
 
-//# sourceMappingURL=paragraphs.js.map
 
-//# sourceMappingURL=paragraphs.js.map
+
+

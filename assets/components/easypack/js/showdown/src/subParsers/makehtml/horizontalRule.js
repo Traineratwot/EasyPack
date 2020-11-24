@@ -17,6 +17,6 @@ showdown.subParser('makehtml.horizontalRule', function (text, options, globals) 
   return text;
 });
 
-//# sourceMappingURL=horizontalRule.js.map
 
-//# sourceMappingURL=horizontalRule.js.map
+
+

@@ -378,6 +378,6 @@ showdown.validateExtension = function (ext) {
   return true;
 };
 
-//# sourceMappingURL=showdown.js.map
 
-//# sourceMappingURL=showdown.js.map
+
+

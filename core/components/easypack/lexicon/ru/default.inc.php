@@ -21,6 +21,7 @@
 	$_lang['EasyPack.changelog']                    = 'История изменений';
 	$_lang['EasyPack.create_new_package']           = 'Создать новы пакет';
 	$_lang['EasyPack.Packages']                     = 'Пакеты';
+	$_lang['EasyPack.Package']                      = 'Пакет';
 	$_lang['EasyPack.select']                       = 'Выбрать';
 	$_lang['EasyPack.create_new_pack']              = 'Создать новый пакет';
 	$_lang['EasyPack.license']                      = 'Лицензия';

@@ -69,6 +69,6 @@ showdown.subParser('makeMarkdown.table', function (node, globals) {
   return txt.trim();
 });
 
-//# sourceMappingURL=table.js.map
 
-//# sourceMappingURL=table.js.map
+
+

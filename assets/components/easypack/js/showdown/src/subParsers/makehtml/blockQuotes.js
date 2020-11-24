@@ -41,6 +41,6 @@ showdown.subParser('makehtml.blockQuotes', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=blockQuotes.js.map
 
-//# sourceMappingURL=blockQuotes.js.map
+
+

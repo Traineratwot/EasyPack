@@ -215,6 +215,6 @@ showdown.subParser('makehtml.lists', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=lists.js.map
 
-//# sourceMappingURL=lists.js.map
+
+

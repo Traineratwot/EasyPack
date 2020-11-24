@@ -10,6 +10,6 @@ showdown.subParser('makehtml.ellipsis', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=ellipsis.js.map
 
-//# sourceMappingURL=ellipsis.js.map
+
+

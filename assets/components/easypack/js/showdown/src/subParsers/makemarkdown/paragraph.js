@@ -16,6 +16,6 @@ showdown.subParser('makeMarkdown.paragraph', function (node, globals) {
   return txt;
 });
 
-//# sourceMappingURL=paragraph.js.map
 
-//# sourceMappingURL=paragraph.js.map
+
+

@@ -63,17 +63,8 @@ function htmlUnEncode(text) {
 
 showdown.setFlavor('github')
 
-var converter = new showdown.Converter({
-	tables: true,
-	tasklists: true,
-	smartIndentationFix: true,
-	openLinksInNewWindow: true,
-	emoji: true,
-	// smoothPreview: '#wrap'
-})
-
 function convert(self, response) {
-	$(self).html(converter.makeHtml(response))
+	$(self).html(extraExt.mdConverter.makeHtml(response))
 	document.querySelectorAll('pre code').forEach((block) => {
 		hljs.highlightBlock(block)
 	})

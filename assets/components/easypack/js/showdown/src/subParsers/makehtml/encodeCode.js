@@ -22,6 +22,6 @@ showdown.subParser('makehtml.encodeCode', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=encodeCode.js.map
 
-//# sourceMappingURL=encodeCode.js.map
+
+

@@ -22,6 +22,7 @@
 	$_lang['EasyPack.changelog']                     = 'Changelog';
 	$_lang['EasyPack.create_new_package']            = 'Create New Package';
 	$_lang['EasyPack.Packages']                      = 'Packages';
+	$_lang['EasyPack.Package']                       = 'Package';
 	$_lang['EasyPack.select']                        = 'Select';
 	$_lang['EasyPack.create_new_pack']               = 'Create New Package';
 	$_lang['EasyPack.license']                       = 'License';

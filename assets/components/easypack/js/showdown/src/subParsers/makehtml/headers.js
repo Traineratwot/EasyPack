@@ -125,6 +125,6 @@ showdown.subParser('makehtml.headers', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=headers.js.map
 
-//# sourceMappingURL=headers.js.map
+
+

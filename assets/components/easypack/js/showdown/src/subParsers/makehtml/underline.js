@@ -31,6 +31,6 @@ showdown.subParser('makehtml.underline', function (text, options, globals) {
   return text;
 });
 
-//# sourceMappingURL=underline.js.map
 
-//# sourceMappingURL=underline.js.map
+
+

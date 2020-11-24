@@ -61,6 +61,6 @@ showdown.subParser('makehtml.completeHTMLDocument', function (text, options, glo
   return text;
 });
 
-//# sourceMappingURL=completeHTMLDocument.js.map
 
-//# sourceMappingURL=completeHTMLDocument.js.map
+
+

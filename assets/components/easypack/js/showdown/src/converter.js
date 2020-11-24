@@ -601,6 +601,6 @@ showdown.Converter = function (converterOptions) {
   };
 };
 
-//# sourceMappingURL=converter.js.map
 
-//# sourceMappingURL=converter.js.map
+
+
