@@ -30,6 +30,7 @@
 	$_lang['EasyPack.test']                         = 'Тестировать пакет';
 	$_lang['EasyPack.testing']                      = 'Результат тестирование [[+name]]';
 	$_lang['EasyPack.getResolver']                  = 'Получить подготовленный resolver';
+	$_lang['EasyPack.dependence']                   = 'Зависимости от компонентов';
 
 	$_lang['_js_mgr_']                              = 'Создать папку <strong style="color: black;">/js/mgr </strong> в assets/components/[[+name]]/?';
 	$_lang['_controllers_mgr_']                     = 'Создать папку <strong style="color: black;">/controllers/mgr </strong> в core/components/[[+name]]/?';
@@ -43,6 +44,8 @@
 	$_lang['_model_']                               = 'Создать xml схемы таблиц и их классы? (автоматически запускается при создании пакета)';
 	$_lang['_namespace_']                           = 'Создать пространство имён для <strong style="color: black;">[[+name]]</strong>? (автоматически запускается при создании пакета)';
 	$_lang['_elements_']                            = 'Сохранить элементы(плагины,чанки,снипеты,...) в папку <strong style="color: black;">/elements/</strong> в core/components/[[+name]]/? (автоматически запускается при создании пакета)';
+	$_lang['add_dependence_modutil']                = 'Добавить зависимость от <strong style="color: black;">modUtilities</strong>';
+	$_lang['add_dependence_extraExt']               = 'Добавить зависимость от <strong style="color: black;">ExtraExt</strong>';
 
 
 	$_lang['EasyPack.description.date']             = 'Время последнего обновления';
@@ -60,6 +63,7 @@
 	$_lang['EasyPack.description.menus']            = 'Массив пунктов меню';
 	$_lang['EasyPack.description.settings']         = 'Массив настроек';
 	$_lang['EasyPack.description.version']          = 'версия в формате: 0.0.0-pl';
+	$_lang['EasyPack.description.dependence']       = 'Зависимости от других компонентов с версией не раньше текущей(если вы внесете изменения в ручную они не затруться)';
 
 	$_lang['EasyPack.core']                         = 'Путь к core';
 	$_lang['EasyPack.description.core']             = 'Путь к core от MODX_BASE_PATH, если пути стандартны оставьте пустым';

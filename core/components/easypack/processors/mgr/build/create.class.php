@@ -191,6 +191,7 @@
 			if ((bool)$this->getProperty('create__elements_')) {
 				$this->_addElements();
 			}
+			$this->_addDependence();
 
 		}
 
@@ -471,6 +472,27 @@
 				}
 				@file_put_contents($langPath, $txt, FILE_APPEND);
 			}
+		}
+
+		public function _addDependence()
+		{
+			if ((bool)$this->getProperty('add_dependence_extraExt')) {
+				$this->setDependence('ExtraExt', ["service_url" => "modstore.pro"]);
+			}
+			if ((bool)$this->getProperty('add_dependence_modutil')) {
+				$this->setDependence('modUtilities', ["service_url" => "modstore.pro"]);
+			}
+		}
+
+		public function setDependence($name = '', $data = [])
+		{
+			$requires = $this->Easypack->getProperty('requires', []);
+			if ($requires) {
+				$requires = json_decode($requires, 1);
+			}
+			$requires['extras'][$name] = $data;
+			$this->Easypack->set('requires', $requires);
+			$this->Easypack->save();
 		}
 
 	}

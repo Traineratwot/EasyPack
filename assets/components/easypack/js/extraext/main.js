@@ -13,7 +13,7 @@ Ext.extend(EasyPack, MODx.Component, { // Перечисляем группы, �
 })
 Ext.reg('EasyPack', EasyPack)
 EasyPack = new EasyPack()
-var elemTemplate = new Ext.XTemplate('<tpl for=".">\
+var elemTemplate0 = new Ext.XTemplate('<tpl for=".">\
 						<div class="x-combo-list-item">\
 							<tpl if="id">({id})</tpl>\
 							<strong>{name}</strong><small>({category_name})</small>\
@@ -164,7 +164,7 @@ EasyPack.panel.Home = function(config) {
 				allowBlank: true,
 				valueField: 'name',
 				displayField: 'name',
-				tpl: elemTemplate
+				tpl: elemTemplate0
 			},
 		},
 		{
@@ -191,7 +191,7 @@ EasyPack.panel.Home = function(config) {
 				allowBlank: true,
 				valueField: 'name',
 				displayField: 'name',
-				tpl: elemTemplate
+				tpl: elemTemplate0
 			},
 		},
 		{
@@ -218,7 +218,7 @@ EasyPack.panel.Home = function(config) {
 				allowBlank: true,
 				valueField: 'name',
 				displayField: 'name',
-				tpl: elemTemplate
+				tpl: elemTemplate0
 			},
 		},
 		{
@@ -467,225 +467,227 @@ EasyPack.panel.Home = function(config) {
 				items: [
 					{
 						title: _('EasyPack.Packages'),
-						items: [{
-							id: 'EasyPack-main-table',
-							name: _('EasyPack.Package'),
-							xtype: extraExt.grid.xtype,
-							extraEditor: 'EasyPack-window-add',
-							columns: columns,
-							fields: [
-								'id',
-								'name',
-								'version',
-								'date',
-								'chunks',
-								'snippets',
-								'plugins',
-								'templates',
-								'resources',
-								'menus',
-								'settings',
-								'core',
-								'assets',
-								'requires',
-								'readme',
-								'changelog',
-								'setup_option',
-								'php_resolver',
-								'license',
-								'tables',
-								'path_to_last_transport',
-								'modUtilitiesRest',
-							],
-							autosave: true,
-							nameField: 'name',
-							url: easypackConnectorUrl,
-							extraExtSearch: true,
-							extraExtUpdate: true,
-							extraExtCreate: true,
-							extraExtDelete: true,
-							requestDataType: 'form',
-							action: 'mgr/get',
-							save_action: 'mgr/update',
-							create_action: 'mgr/create',
-							delete_action: 'mgr/del',
-							addMenu: function(m, grid, rowIndex) {
-								m.push({
-									text: _('EasyPack.create_structure'),
-									grid: grid,
-									rowIndex: rowIndex,
-									handler: this.create
-								})
-								m.push({
-									text: _('EasyPack.build'),
-									grid: grid,
-									rowIndex: rowIndex,
-									handler: this.build
-								})
-								m.push({
-									text: _('EasyPack.getResolver'),
-									grid: grid,
-									rowIndex: rowIndex,
-									handler: this.getResolver
-								})
-								// m.push({
-								// 	text: _('EasyPack.test'),
-								// 	grid: grid,
-								// 	rowIndex: rowIndex,
-								// 	handler: this.test
-								// })
-								return m
-							},
-							del: function() {
-								var cs = this.getSelectedAsList()
-								var self = this
-								MODx.msg.confirm({
-									title: _('delete'),
-									text: _('confirm_remove'),
-									url: easypackConnectorUrl,
-									params: {
-										action: 'mgr/del',
-										id: cs,
-									},
-									listeners: {
-										'success': {
-											fn: function(r) {
-												if(!r.success) {
-													MODx.msg.status({
-														title: _('undeleted'),
-														message: 'Ошибка',
-														delay: 3
-													})
-												} else {
-													MODx.msg.status({
-														title: _('delete'),
-														message: 'Готово',
-														delay: 3
-													})
-												}
-												self.refresh()
-											}, scope: true
+						layout: '',
+						items: [
+							{
+								id: 'EasyPack-main-table',
+								name: _('EasyPack.Package'),
+								xtype: extraExt.grid.xtype,
+								extraEditor: 'EasyPack-window-add',
+								columns: columns,
+								fields: [
+									'id',
+									'name',
+									'version',
+									'date',
+									'chunks',
+									'snippets',
+									'plugins',
+									'templates',
+									'resources',
+									'menus',
+									'settings',
+									'core',
+									'assets',
+									'requires',
+									'readme',
+									'changelog',
+									'setup_option',
+									'php_resolver',
+									'license',
+									'tables',
+									'path_to_last_transport',
+									'modUtilitiesRest',
+								],
+								autosave: true,
+								nameField: 'name',
+								url: easypackConnectorUrl,
+								extraExtSearch: true,
+								extraExtUpdate: true,
+								extraExtCreate: true,
+								extraExtDelete: true,
+								requestDataType: 'form',
+								action: 'mgr/get',
+								save_action: 'mgr/update',
+								create_action: 'mgr/create',
+								delete_action: 'mgr/del',
+								addMenu: function(m, grid, rowIndex) {
+									m.push({
+										text: _('EasyPack.create_structure'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.create
+									})
+									m.push({
+										text: _('EasyPack.build'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.build
+									})
+									m.push({
+										text: _('EasyPack.getResolver'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.getResolver
+									})
+									// m.push({
+									// 	text: _('EasyPack.test'),
+									// 	grid: grid,
+									// 	rowIndex: rowIndex,
+									// 	handler: this.test
+									// })
+									return m
+								},
+								del: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									MODx.msg.confirm({
+										title: _('delete'),
+										text: _('confirm_remove'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/del',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													if(!r.success) {
+														MODx.msg.status({
+															title: _('undeleted'),
+															message: 'Ошибка',
+															delay: 3
+														})
+													} else {
+														MODx.msg.status({
+															title: _('delete'),
+															message: 'Готово',
+															delay: 3
+														})
+													}
+													self.refresh()
+												}, scope: true
+											}
 										}
-									}
-								})
-							},
-							build: function() {
-								var cs = this.getSelectedAsList()
-								var self = this
-								MODx.msg.confirm({
-									title: _('create'),
-									text: _('confirm'),
-									url: easypackConnectorUrl,
-									params: {
-										action: 'mgr/build/build',
-										id: cs,
-									},
-									listeners: {
-										'success': {
-											fn: function(r) {
-												if(!r.success) {
-													MODx.msg.status({
-														title: 'building',
-														message: 'Ошибка',
-														delay: 3
-													})
-												} else {
-													console.log(r)
-													MODx.msg.status({
-														title: 'building',
-														message: `Готово ${r.object.time}<br>
+									})
+								},
+								build: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/build/build',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													if(!r.success) {
+														MODx.msg.status({
+															title: 'building',
+															message: 'Ошибка',
+															delay: 3
+														})
+													} else {
+														console.log(r)
+														MODx.msg.status({
+															title: 'building',
+															message: `Готово ${r.object.time}<br>
 														<a href="${r.object.path}" target="_blank" >Скачать</a>
 														`,
-														delay: 10
+															delay: 10
+														})
+													}
+													self.refresh()
+												}, scope: true
+											}
+										}
+									})
+								},
+								update: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.load({
+										xtype: 'EasyPack-window-add',
+										title: `обновить ${data.name}`,
+										updateId: cs,
+										updateData: data,
+										action: self.save_action,
+									}).show()
+								},
+								create: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.load({
+										xtype: 'EasyPack-window-create',
+										title: _('EasyPack.create') + ` ${data.name}`,
+										updateId: cs,
+										updateData: data,
+									}).show()
+								},
+								test: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/build/testPack',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													Ext.MessageBox.show({
+														title: config.title || '',
+														msg: r.object.msg || '',
+														width: window.innerWidth / 100 * 50,
+														height: window.innerHeight / 100 * 50,
+														buttons: Ext.MessageBox.CANCEL,
+														icon: Ext.MessageBox.QUESTION
 													})
-												}
-												self.refresh()
-											}, scope: true
+													self.refresh()
+												}, scope: true
+											}
 										}
-									}
-								})
-							},
-							update: function() {
-								var cs = this.getSelectedAsList()
-								var self = this
-								var data = this.getSelectionModel().getSelections()[0].data
-								MODx.load({
-									xtype: 'EasyPack-window-add',
-									title: `обновить ${data.name}`,
-									updateId: cs,
-									updateData: data,
-									action: self.save_action,
-								}).show()
-							},
-							create: function() {
-								var cs = this.getSelectedAsList()
-								var self = this
-								var data = this.getSelectionModel().getSelections()[0].data
-								MODx.load({
-									xtype: 'EasyPack-window-create',
-									title: _('EasyPack.create') + ` ${data.name}`,
-									updateId: cs,
-									updateData: data,
-								}).show()
-							},
-							test: function() {
-								var cs = this.getSelectedAsList()
-								var self = this
-								var data = this.getSelectionModel().getSelections()[0].data
-								MODx.msg.confirm({
-									title: _('create'),
-									text: _('confirm'),
-									url: easypackConnectorUrl,
-									params: {
-										action: 'mgr/build/testPack',
-										id: cs,
-									},
-									listeners: {
-										'success': {
-											fn: function(r) {
-												Ext.MessageBox.show({
-													title: config.title || '',
-													msg: r.object.msg || '',
-													width: window.innerWidth / 100 * 50,
-													height: window.innerHeight / 100 * 50,
-													buttons: Ext.MessageBox.CANCEL,
-													icon: Ext.MessageBox.QUESTION
-												})
-												self.refresh()
-											}, scope: true
+									})
+								},
+								getResolver: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/build/genresolver',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													extraExt.util.renderer.openPopup({
+														title: config.title || '',
+														msg: r.message || '',
+														buttons: Ext.MessageBox.CANCEL,
+														icon: Ext.MessageBox.QUESTION,
+														type: 'php'
+													})
+													self.refresh()
+												}, scope: true
+											}
 										}
-									}
-								})
-							},
-							getResolver: function() {
-								var cs = this.getSelectedAsList()
-								var self = this
-								var data = this.getSelectionModel().getSelections()[0].data
-								MODx.msg.confirm({
-									title: _('create'),
-									text: _('confirm'),
-									url: easypackConnectorUrl,
-									params: {
-										action: 'mgr/build/genresolver',
-										id: cs,
-									},
-									listeners: {
-										'success': {
-											fn: function(r) {
-												extraExt.util.renderer.openPopup({
-													title: config.title || '',
-													msg: r.message || '',
-													buttons: Ext.MessageBox.CANCEL,
-													icon: Ext.MessageBox.QUESTION,
-													type: 'php'
-												})
-												self.refresh()
-											}, scope: true
-										}
-									}
-								})
-							},
-						}
+									})
+								},
+							}
 						]
 					},
 					{
@@ -710,17 +712,44 @@ Ext.reg('EasyPack-panel-home', EasyPack.panel.Home)
 
 //окно редактора
 EasyPack.window.add = function(config) {
+	config = Object.assign({
+		updateData: {}
+	}, config)
 	config.tables = function(key) {
-		if(config.updateData.tables) {
-			var data = JSON.parse(config.updateData.tables)
-			switch( key ) {
-				case 'tables':
-					return data.tables.join(',')
-					break
-				case 'prefix':
-					return data.prefix
-					break
+		try {
+			if(config.updateData.tables) {
+				var data = JSON.parse(config.updateData.tables)
+				switch( key ) {
+					case 'tables':
+						return data.tables.join(',')
+						break
+					case 'prefix':
+						return data.prefix
+						break
+				}
 			}
+
+		} catch(e) {
+
+		}
+		return ''
+	}
+	config.dependence = function() {
+		if(config.updateData.tables) {
+			try {
+				var data = JSON.parse(config.updateData.requires)
+				var extras = Object.keys(data?.extras) || []
+				var res = []
+				for(var i of extras) {
+					var t = {}
+					t['package_name'] = i
+					res.push(t)
+				}
+				return res
+			} catch(e) {
+
+			}
+			return ''
 		}
 	}
 	var fields = [
@@ -768,7 +797,7 @@ EasyPack.window.add = function(config) {
 			allowBlank: true,
 			valueField: 'name',
 			displayField: 'name',
-			tpl: elemTemplate
+			tpl: elemTemplate0
 		},
 		{
 			xtype: extraExt.inputs.modComboSuper.xtype,
@@ -787,7 +816,7 @@ EasyPack.window.add = function(config) {
 			allowBlank: true,
 			valueField: 'name',
 			displayField: 'name',
-			tpl: elemTemplate
+			tpl: elemTemplate0
 		},
 		{
 			xtype: extraExt.inputs.modComboSuper.xtype,
@@ -806,7 +835,7 @@ EasyPack.window.add = function(config) {
 			allowBlank: true,
 			valueField: 'name',
 			displayField: 'name',
-			tpl: elemTemplate
+			tpl: elemTemplate0
 		},
 		{
 			xtype: extraExt.inputs.modComboSuper.xtype,
@@ -904,7 +933,7 @@ EasyPack.window.add = function(config) {
 			name: 'prefix',
 			id: 'add-' + this.ident + '-prefix',
 			anchor: '99%',
-			value: config.tables('prefix') || null,
+			value: config.tables('prefix') || modx_prefix,
 			allowBlank: true,
 			rootVisible: true,
 			listeners: ToolTip,
@@ -947,6 +976,26 @@ EasyPack.window.add = function(config) {
 			value: config.updateData['requires'] || null,
 			allowBlank: true,
 			rootVisible: true,
+		},
+		{
+			xtype: extraExt.inputs.modComboSuper.xtype,
+			name: 'dependence',
+			fieldLabel: _('EasyPack.dependence'),
+			tooltip: _('EasyPack.description.dependence'),
+			id: 'add-' + this.ident + '-dependence',
+			anchor: '99%',
+			url: MODx.config.connector_url,
+			baseParams: {
+				action: 'workspace/packages/getlist', combo: 1, sort: 'package_name',
+				dir: 'DESK',
+			},
+			value: config.dependence() || null,
+			forceSelection: true,
+			fields: ['package_name'],
+			allowBlank: true,
+			valueField: 'package_name',
+			displayField: 'package_name',
+
 		},
 
 		{
@@ -1061,110 +1110,129 @@ EasyPack.window.create = function(config) {
 	this.saveBtnText = _('EasyPack.create'),
 		this.title = _('EasyPack.create_structure') + ' - ' + config.updateData.name
 	var self = this
+	var fields = [
+		{
+			xtype: 'hidden',
+			name: 'id',
+			value: config.updateData.id || null,
+			allowBlank: true
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__js_mgr_',
+			id: 'add-' + this.ident + '-create__js_mgr_',
+			boxLabel: _('_js_mgr_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__controllers_mgr_',
+			id: 'add-' + this.ident + '-create__controllers_mgr_',
+			boxLabel: _('_controllers_mgr_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__docs_',
+			id: 'add-' + this.ident + '-create__docs_',
+			boxLabel: _('_docs_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__elements_chunks_',
+			id: 'add-' + this.ident + '-create__elements_chunks_',
+			boxLabel: _('_elements_chunks_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__elements_plugins_',
+			id: 'add-' + this.ident + '-create__elements_plugins_',
+			boxLabel: _('_elements_plugins_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__elements_snippets_',
+			id: 'add-' + this.ident + '-create__elements_snippets_',
+			boxLabel: _('_elements_snippets_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__elements_templates_',
+			id: 'add-' + this.ident + '-create__elements_templates_',
+			boxLabel: _('_elements_templates_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__lexicon_en_',
+			id: 'add-' + this.ident + '-create__lexicon_en_',
+			boxLabel: _('_lexicon_en_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__processors_',
+			id: 'add-' + this.ident + '-create__processors_',
+			boxLabel: _('_processors_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__model_',
+			id: 'add-' + this.ident + '-create__model_',
+			boxLabel: _('_model_', {name: config.updateData.name_lower}),
+			originalValue: true,
+
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__namespace_',
+			id: 'add-' + this.ident + '-create__namespace_',
+			boxLabel: _('_namespace_', {name: config.updateData.name_lower}),
+			originalValue: true,
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'create__elements_',
+			id: 'add-' + this.ident + '-create__elements_',
+			boxLabel: _('_elements_', {name: config.updateData.name_lower}),
+			originalValue: true,
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'add_dependence_extraExt',
+			isOptional: true,
+			id: 'add-' + this.ident + '-add_dependence_extraExt',
+			boxLabel: _('add_dependence_extraExt'),
+			originalValue: true,
+		}
+	]
+	if(modUtil) {
+		fields.push({
+			xtype: 'xcheckbox',
+			name: 'add_dependence_modutil',
+			isOptional: true,
+			id: 'add-' + this.ident + '-add_dependence_modutil',
+			boxLabel: _('add_dependence_modutil'),
+			originalValue: true,
+		})
+	}
 	Ext.applyIf(config, {
 		id: 'EasyPack-window-' + this.ident + '-create',
-		fields: [
-			{
-				xtype: 'hidden',
-				name: 'id',
-				value: config.updateData.id || null,
-				allowBlank: true
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__js_mgr_',
-				id: 'add-' + this.ident + '-create__js_mgr_',
-				boxLabel: _('_js_mgr_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__controllers_mgr_',
-				id: 'add-' + this.ident + '-create__controllers_mgr_',
-				boxLabel: _('_controllers_mgr_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__docs_',
-				id: 'add-' + this.ident + '-create__docs_',
-				boxLabel: _('_docs_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__elements_chunks_',
-				id: 'add-' + this.ident + '-create__elements_chunks_',
-				boxLabel: _('_elements_chunks_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__elements_plugins_',
-				id: 'add-' + this.ident + '-create__elements_plugins_',
-				boxLabel: _('_elements_plugins_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__elements_snippets_',
-				id: 'add-' + this.ident + '-create__elements_snippets_',
-				boxLabel: _('_elements_snippets_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__elements_templates_',
-				id: 'add-' + this.ident + '-create__elements_templates_',
-				boxLabel: _('_elements_templates_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__lexicon_en_',
-				id: 'add-' + this.ident + '-create__lexicon_en_',
-				boxLabel: _('_lexicon_en_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__processors_',
-				id: 'add-' + this.ident + '-create__processors_',
-				boxLabel: _('_processors_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__model_',
-				id: 'add-' + this.ident + '-create__model_',
-				boxLabel: _('_model_', {name: config.updateData.name_lower}),
-				originalValue: true,
-
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__namespace_',
-				id: 'add-' + this.ident + '-create__namespace_',
-				boxLabel: _('_namespace_', {name: config.updateData.name_lower}),
-				originalValue: true,
-			},
-			{
-				xtype: 'xcheckbox',
-				name: 'create__elements_',
-				id: 'add-' + this.ident + '-create__elements_',
-				boxLabel: _('_elements_', {name: config.updateData.name_lower}),
-				originalValue: true,
-			},
-		],
+		fields: fields,
 		saveBtnText: _('EasyPack.create') + ' 🗂',
 		action: 'mgr/build/create',
 		url: easypackConnectorUrl,
@@ -1174,7 +1242,7 @@ EasyPack.window.create = function(config) {
 				handler: function(e) {
 					var f = Ext.getCmp('EasyPack-window-' + self.ident + '-create').fields
 					for(x of f) {
-						if(x.id) {
+						if(x.id && x?.isOptional !== true) {
 							Ext.getCmp(x.id).setValue(true)
 						}
 					}

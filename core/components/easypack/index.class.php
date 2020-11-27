@@ -35,6 +35,7 @@
 				$this->addHtml('
 			<script type="text/javascript">
 				var modUtil = "' . $modUtil . '";
+				var modx_prefix = "' . $this->modx->config["table_prefix"] . '";
 				if(modUtil){
 					var modUtilConnector_url = "' . $assets . 'components/modutilities/connector.php";
 				}else{
