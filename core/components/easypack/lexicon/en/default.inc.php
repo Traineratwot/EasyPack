@@ -6,8 +6,9 @@
 	 * @subpackage lexicon
 	 */
 
-	$_lang['EasyPack']                               = 'Packer';
-	$_lang['easypack']                               = 'Packer';
+	$_lang['EasyPack']                               = 'Packer <i class="fad fa-box"></i>';
+	$_lang['easypack_title']                         = 'Packer';
+	$_lang['easypack']                               = 'Packer <i class="fad fa-box"></i>';
 	$_lang['EasyPack.build']                         = 'Build Package';
 	$_lang['EasyPack.requires']                      = 'Dependencies';
 	$_lang['EasyPack.description.requires']          = 'Dependencies in json format';
@@ -43,6 +44,7 @@
 	$_lang['_ processors_']                          = 'create folder <strong style="color: black;"> / processors / </strong> in assets / components / [[+ name]] /?';
 	$_lang['_ model_']                               = 'create xml table schemas and their classes? (automatically launched when the package is created) ';
 	$_lang['_ namespace_']                           = 'create a namespace for <strong style="color: black;"> [[+ name]] </strong>? (automatically launched when the package is created) ';
+	$_lang['import_from_category']                   = 'Import Chunks, Snipets, Plugins from category <strong style="color: black;">[[+name]]</strong>?';
 	$_lang['_ elements_']                            = 'Save elements (plugins, chunks, snippets, ...) to the <strong style="color: black;"> / elements / </strong> folder in assets / components / [[+ name]] /? (automatically launched when the package is created) ';
 
 

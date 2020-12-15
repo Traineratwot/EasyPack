@@ -21,7 +21,7 @@
 
 			public function getPageTitle()
 			{
-				return $this->modx->lexicon('easypack');
+				return $this->modx->lexicon('easypack_title');
 			}
 
 			public function loadCustomCssJs()
@@ -33,15 +33,15 @@
 				$this->addLastJavascript('js/extraext/wiki.js',$this->componentUrl);
 				$modUtil = file_exists(MODX_CORE_PATH . 'components/modutilities');
 				$this->addHtml('
-			<script type="text/javascript">
-				var modUtil = "' . $modUtil . '";
-				var modx_prefix = "' . $this->modx->config["table_prefix"] . '";
-				if(modUtil){
-					var modUtilConnector_url = "' . $assets . 'components/modutilities/connector.php";
-				}else{
-					var modUtilConnector_url = EasyPackConnector_url;
-				}
-			</script>');
+				<script type="text/javascript">
+					var modUtil = "' . $modUtil . '";
+					var modx_prefix = "' . $this->modx->config["table_prefix"] . '";
+					if(modUtil){
+						var modUtilConnector_url = "' . $assets . 'components/modutilities/connector.php";
+					}else{
+						var modUtilConnector_url = EasyPackConnector_url;
+					}
+				</script>');
 			}
 		}
 	} else {

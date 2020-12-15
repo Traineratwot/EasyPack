@@ -53,6 +53,19 @@
 			return [];
 		}
 
+		public function getElem($k, $format = NULL, $formatTemplate = NULL)
+		{
+			switch ($k) {
+				case 'snippets':
+					return $this->getSnippets();
+				case 'chunks':
+					return $this->getChunks();
+				case 'plugins':
+					return $this->getPlugins();
+			}
+			return parent::get($k, $format, $formatTemplate);
+		}
+
 		public function getTemplates()
 		{
 			$Templates = $this->getProperty('templates');

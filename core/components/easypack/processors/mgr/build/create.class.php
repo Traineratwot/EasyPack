@@ -191,6 +191,9 @@
 			if ((bool)$this->getProperty('create__elements_')) {
 				$this->_addElements();
 			}
+			if ((bool)$this->getProperty('import_from_category')) {
+				$this->_import_from_category();
+			}
 			$this->_addDependence();
 
 		}
@@ -493,6 +496,37 @@
 			$requires['extras'][$name] = $data;
 			$this->Easypack->set('requires', $requires);
 			$this->Easypack->save();
+		}
+
+		public function _import_from_category()
+		{
+			$PKG_NAME = $this->PKG_NAME;
+			$PKG_NAME_LOWER = $this->PKG_NAME_LOWER;
+			$classes = [
+				'modSnippet' => 'snippets',
+				'modChunk' => 'chunks',
+				'modPlugin' => 'plugins',
+			];
+			$q = "select id from {$this->prefix}categories where `category`='{$PKG_NAME}' OR `category`='{$PKG_NAME_LOWER}'";
+			$categoryId = $this->modx->query($q);
+			if ($categoryId) {
+				$categoryId = $categoryId->fetch(PDO::FETCH_COLUMN);
+				foreach ($classes as $class => $v) {
+					$elems = $this->modx->getIterator($class, ['category' => $categoryId]);
+					$e = $this->Easypack->getElem($v);
+					foreach ($elems as $elem) {
+						$name = $elem->get('name');
+						$e[] = $name;
+					}
+					$e = array_unique($e);
+					if (!empty($e)) {
+						$this->Easypack->set($v, $e);
+					}
+				}
+				$this->Easypack->save();
+
+			}
+
 		}
 
 	}

@@ -545,7 +545,7 @@
 			if (isset($this->reqExtras) and is_array($this->reqExtras) and !empty($this->reqExtras)) {
 				$packages = json_encode($this->reqExtras, 256);
 				$txt = include MODX_CORE_PATH . 'components/easypack/processors/mgr/build/examples/extras.download.php';
-				$this->tmp_resolver = tempnam(sys_get_temp_dir(), $this->PKG_NAME_LOWER . '_resolver_');
+				$this->tmp_resolver = tempnam(sys_get_temp_dir(), 'aaa'.$this->PKG_NAME_LOWER . '_resolver_');
 				if (!file_exists($this->tmp_resolver)) {
 					$this->tmp_resolver = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/tmp' . $this->PKG_NAME_LOWER . '.resolver';
 					if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), 0777, 1) && !is_dir($concurrentDirectory)) {

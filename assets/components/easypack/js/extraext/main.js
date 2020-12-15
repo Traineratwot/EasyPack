@@ -109,7 +109,8 @@ EasyPack.panel.Home = function(config) {
 			dataIndex: 'version',
 			width: 200,
 			header: _('version'),
-			emptyText: '0.0.1-pl',
+			emptyText: '0.0.0-pl',
+			defaultValue: '0.0.1-pl',
 			sortable: true,
 			extraExtEditor: {},
 			tooltip: _('EasyPack.description.version'),
@@ -118,7 +119,7 @@ EasyPack.panel.Home = function(config) {
 			extraExtEditor: {
 				xtype: 'textfield',
 				fieldLabel: _('version'),
-				emptyText: '0.0.1-pl',
+				emptyText: '0.0.2-pl',
 				allowBlank: false
 			},
 		},
@@ -340,7 +341,17 @@ EasyPack.panel.Home = function(config) {
 			renderer: extraExt.grid.renderers.default,
 			hidden: true,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				canSelectFile: false,
+				fieldLabel: _('EasyPack.core'),
+				tooltip: _('EasyPack.description.core'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				source: MODx.config.default_media_source,
+			}
 		},
 		{
 			dataIndex: 'assets',
@@ -351,7 +362,17 @@ EasyPack.panel.Home = function(config) {
 			hidden: true,
 			renderer: extraExt.grid.renderers.default,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				canSelectFile: false,
+				fieldLabel: _('EasyPack.assets'),
+				tooltip: _('EasyPack.description.assets'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				source: MODx.config.default_media_source,
+			}
 		},
 
 		{
@@ -366,7 +387,10 @@ EasyPack.panel.Home = function(config) {
 				popup: true,
 			},
 			editor: {xtype: 'textarea'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.inputs.popup.xtype,
+				fields: []
+			},
 		},
 		{
 			dataIndex: 'readme',
@@ -377,7 +401,16 @@ EasyPack.panel.Home = function(config) {
 			hidden: true,
 			renderer: extraExt.grid.renderers.default,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				fieldLabel: _('EasyPack.readme'),
+				tooltip: _('EasyPack.description.readme'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				source: MODx.config.default_media_source,
+			}
 		},
 		{
 			dataIndex: 'changelog',
@@ -388,7 +421,16 @@ EasyPack.panel.Home = function(config) {
 			hidden: true,
 			renderer: extraExt.grid.renderers.default,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				fieldLabel: _('EasyPack.changelog'),
+				tooltip: _('EasyPack.description.changelog'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				source: MODx.config.default_media_source,
+			}
 		},
 
 		{
@@ -402,8 +444,68 @@ EasyPack.panel.Home = function(config) {
 			extraExtRenderer: {
 				popup: true,
 			},
-			editor: {xtype: 'textarea'},
-			extraExtEditor: {},
+			editor: {
+				xtype: extraExt.inputs.popup.xtype,
+				defaultValue: JSON.stringify({'prefix': modx_prefix}),
+				fields: [
+					{
+						xtype: extraExt.inputs.modComboSuper.xtype,
+						fieldLabel: _('EasyPack.tables'),
+						forceSelection: true,
+						fields: ['key'],
+						name: 'tables',
+						url: easypackConnectorUrl,
+						baseParams: {
+							action: 'show/gettables', combo: 1,
+						},
+						allowBlank: true,
+						valueField: 'key',
+						displayField: 'key',
+						listeners: ToolTip,
+					},
+					{
+						xtype: 'textfield',
+						fieldLabel: _('EasyPack.prefix'),
+						name: 'prefix',
+						id: 'add-' + this.ident + '-prefix',
+						anchor: '99%',
+						allowBlank: true,
+						rootVisible: true,
+						listeners: ToolTip,
+					},
+				]
+			},
+			extraExtEditor: {
+				xtype: extraExt.inputs.popup.xtype,
+				defaultValue: JSON.stringify({'prefix': modx_prefix}),
+				fields: [
+					{
+						xtype: extraExt.inputs.modComboSuper.xtype,
+						fieldLabel: _('EasyPack.tables'),
+						forceSelection: true,
+						fields: ['key'],
+						name: 'tables',
+						url: easypackConnectorUrl,
+						baseParams: {
+							action: 'show/gettables', combo: 1,
+						},
+						allowBlank: true,
+						valueField: 'key',
+						displayField: 'key',
+						listeners: ToolTip,
+					},
+					{
+						xtype: 'textfield',
+						fieldLabel: _('EasyPack.prefix'),
+						name: 'prefix',
+						id: 'add-' + this.ident + '-prefix',
+						anchor: '99%',
+						allowBlank: true,
+						rootVisible: true,
+						listeners: ToolTip,
+					},
+				]
+			},
 		},
 
 		{
@@ -414,7 +516,17 @@ EasyPack.panel.Home = function(config) {
 			sortable: true,
 			renderer: extraExt.grid.renderers.default,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				fieldLabel: _('EasyPack.setup_option'),
+				tooltip: _('EasyPack.description.setup_option'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				allowedFileTypes: 'php',
+				source: MODx.config.default_media_source,
+			},
 		},
 		{
 			dataIndex: 'php_resolver',
@@ -424,7 +536,18 @@ EasyPack.panel.Home = function(config) {
 			sortable: true,
 			renderer: extraExt.grid.renderers.default,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				fieldLabel: _('EasyPack.php_resolver'),
+				canSelectFolder: false,
+				tooltip: _('EasyPack.description.php_resolver'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				allowedFileTypes: 'php',
+				source: MODx.config.default_media_source,
+			},
 		},
 		{
 			dataIndex: 'license',
@@ -435,7 +558,17 @@ EasyPack.panel.Home = function(config) {
 			hidden: true,
 			renderer: extraExt.grid.renderers.default,
 			editor: {xtype: 'textfield'},
-			extraExtEditor: {},
+			extraExtEditor: {
+				xtype: extraExt.browser.xtype,
+				canSelectFolder: false,
+				fieldLabel: _('EasyPack.license'),
+				tooltip: _('EasyPack.description.license'),
+				listeners: ToolTip,
+				anchor: '99%',
+				allowBlank: true,
+				rootVisible: true,
+				source: MODx.config.default_media_source,
+			},
 		},
 	]
 	if(modUtil) {
@@ -450,6 +583,25 @@ EasyPack.panel.Home = function(config) {
 				renderer: extraExt.grid.renderers.JSON,
 				extraExtRenderer: {
 					popup: true,
+				},
+				extraExtEditor: {
+					xtype: extraExt.inputs.modComboSuper.xtype,
+					fieldLabel: _('EasyPack.modUtilitiesRest'),
+					name: 'modUtilitiesRest',
+					id: 'add-' + this.ident + '-modUtilitiesRest',
+					anchor: '99%',
+					forceSelection: true,
+					fields: ['id', 'url', 'snippet'],
+					url: modUtilConnector_url,
+					baseParams: {
+						action: 'mgr/rest/rest/get', combo: 1, sort: 'id',
+						dir: 'DESK',
+					},
+					allowBlank: true,
+					valueField: 'url',
+					displayField: 'url',
+					tpl: elemTemplate5
+
 				},
 				editor: {xtype: 'textfield'},
 			}
@@ -513,18 +665,21 @@ EasyPack.panel.Home = function(config) {
 								delete_action: 'mgr/del',
 								addMenu: function(m, grid, rowIndex) {
 									m.push({
+										icon: '<i class="fad fa-folder-tree"></i>',
 										text: _('EasyPack.create_structure'),
 										grid: grid,
 										rowIndex: rowIndex,
 										handler: this.create
 									})
 									m.push({
+										icon: '<i class="fad fa-cogs"></i>',
 										text: _('EasyPack.build'),
 										grid: grid,
 										rowIndex: rowIndex,
 										handler: this.build
 									})
 									m.push({
+										icon: '<i class="fal fa-file"></i>',
 										text: _('EasyPack.getResolver'),
 										grid: grid,
 										rowIndex: rowIndex,
@@ -913,33 +1068,68 @@ EasyPack.window.add = function(config) {
 			displayField: 'key',
 			tpl: elemTemplate4
 		},
-
 		{
-			xtype: 'textarea',
-			toolTip: 'имена таблиц через запятую (с префиксом)',
+			xtype: extraExt.inputs.popup.xtype,
+			fields: [
+				{
+					xtype: extraExt.inputs.modComboSuper.xtype,
+					fieldLabel: _('EasyPack.tables'),
+					forceSelection: true,
+					fields: ['key'],
+					name: 'tables',
+					url: easypackConnectorUrl,
+					baseParams: {
+						action: 'show/gettables', combo: 1,
+					},
+					allowBlank: true,
+					valueField: 'key',
+					displayField: 'key',
+					listeners: ToolTip,
+				},
+				{
+					xtype: 'textfield',
+					fieldLabel: _('EasyPack.prefix'),
+					name: 'prefix',
+					id: 'add-' + this.ident + '-prefix',
+					anchor: '99%',
+					allowBlank: true,
+					rootVisible: true,
+					listeners: ToolTip,
+				},
+			],
 			fieldLabel: _('EasyPack.tables'),
-			name: 'tables',
+			anchor: '99%',
 			id: 'add-' + this.ident + '-tables',
-			anchor: '99%',
-			value: config.tables('tables') || null,
-			allowBlank: true,
-			rootVisible: true,
-			listeners: ToolTip,
-
+			value: config.updateData.tables || JSON.stringify({'prefix': modx_prefix}),
+			name: 'tables',
 		},
+		// {
+		// 	xtype: 'textarea',
+		// 	toolTip: 'имена таблиц через запятую (с префиксом)',
+		// 	fieldLabel: _('EasyPack.tables'),
+		// 	name: 'tables',
+		// 	id: 'add-' + this.ident + '-tables',
+		// 	anchor: '99%',
+		// 	value: config.tables('tables') || null,
+		// 	allowBlank: true,
+		// 	rootVisible: true,
+		// 	listeners: ToolTip,
+		//
+		// },
+		// {
+		// 	xtype: 'textfield',
+		// 	fieldLabel: _('EasyPack.prefix'),
+		// 	name: 'prefix',
+		// 	id: 'add-' + this.ident + '-prefix',
+		// 	anchor: '99%',
+		// 	value: config.tables('prefix') || modx_prefix,
+		// 	allowBlank: true,
+		// 	rootVisible: true,
+		// 	listeners: ToolTip,
+		// },
 		{
-			xtype: 'textfield',
-			fieldLabel: _('EasyPack.prefix'),
-			name: 'prefix',
-			id: 'add-' + this.ident + '-prefix',
-			anchor: '99%',
-			value: config.tables('prefix') || modx_prefix,
-			allowBlank: true,
-			rootVisible: true,
-			listeners: ToolTip,
-		},
-		{
-			xtype: 'textfield',
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			fieldLabel: _('EasyPack.core'),
 			toolTip: _('EasyPack.description.core'),
 			listeners: ToolTip,
@@ -953,7 +1143,8 @@ EasyPack.window.add = function(config) {
 			openTo: '/core/components',
 		},
 		{
-			xtype: 'textfield',
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			fieldLabel: _('EasyPack.assets'),
 			toolTip: _('EasyPack.description.assets'),
 			listeners: ToolTip,
@@ -999,7 +1190,8 @@ EasyPack.window.add = function(config) {
 		},
 
 		{
-			xtype: 'modx-combo-browser',
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			name: 'readme',
 			tooltip: _('EasyPack.description.readme'),
 			fieldLabel: _('EasyPack.readme'),
@@ -1012,7 +1204,8 @@ EasyPack.window.add = function(config) {
 			openTo: '/core/components'
 		},
 		{
-			xtype: 'modx-combo-browser',
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			name: 'changelog',
 			tooltip: _('EasyPack.description.changelog'),
 			fieldLabel: _('EasyPack.changelog'),
@@ -1025,7 +1218,8 @@ EasyPack.window.add = function(config) {
 			openTo: '/core/components'
 		},
 		{
-			xtype: 'modx-combo-browser',
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			fieldLabel: _('EasyPack.setup_option'),
 			tooltip: _('EasyPack.description.setup_option'),
 			listeners: ToolTip,
@@ -1040,7 +1234,8 @@ EasyPack.window.add = function(config) {
 			openTo: '/core/components'
 		},
 		{
-			xtype: 'modx-combo-browser',
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			tooltip: _('EasyPack.description.php_resolver'),
 			fieldLabel: _('EasyPack.php_resolver'),
 			listeners: ToolTip,
@@ -1056,7 +1251,9 @@ EasyPack.window.add = function(config) {
 
 		},
 		{
-			xtype: 'modx-combo-browser',
+
+			xtype: extraExt.browser.xtype,
+			canSelectFolder: false,
 			tooltip: _('EasyPack.description.license'),
 			fieldLabel: _('EasyPack.license'),
 			listeners: ToolTip,
@@ -1209,6 +1406,13 @@ EasyPack.window.create = function(config) {
 			name: 'create__elements_',
 			id: 'add-' + this.ident + '-create__elements_',
 			boxLabel: _('_elements_', {name: config.updateData.name_lower}),
+			originalValue: true,
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'import_from_category',
+			id: 'add-' + this.ident + '-import_from_category',
+			boxLabel: _('import_from_category', {name: config.updateData.name_lower}),
 			originalValue: true,
 		},
 		{

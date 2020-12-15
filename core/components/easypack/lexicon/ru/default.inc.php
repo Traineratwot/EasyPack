@@ -5,8 +5,9 @@
 	 * @package    EasyPack
 	 * @subpackage lexicon
 	 */
-	$_lang['EasyPack']                              = 'Упаковщик';
-	$_lang['easypack']                              = 'Упаковщик';
+	$_lang['EasyPack']                              = 'Упаковщик <i class="fad fa-box"></i>';
+	$_lang['easypack_title']                        = 'Упаковщик';
+	$_lang['easypack']                              = 'Упаковщик <i class="fad fa-box"></i>';
 	$_lang['EasyPack.build']                        = 'Создать пакет';
 	$_lang['EasyPack.requires']                     = 'Зависимости';
 	$_lang['EasyPack.description.requires']         = 'Зависимости в формате json';
@@ -43,7 +44,8 @@
 	$_lang['_processors_']                          = 'Создать папку <strong style="color: black;">/processors/</strong> в assets/components/[[+name]]/?';
 	$_lang['_model_']                               = 'Создать xml схемы таблиц и их классы? (автоматически запускается при создании пакета)';
 	$_lang['_namespace_']                           = 'Создать пространство имён для <strong style="color: black;">[[+name]]</strong>? (автоматически запускается при создании пакета)';
-	$_lang['_elements_']                            = 'Сохранить элементы(плагины,чанки,снипеты,...) в папку <strong style="color: black;">/elements/</strong> в core/components/[[+name]]/? (автоматически запускается при создании пакета)';
+	$_lang['import_from_category']                  = 'Импортировать Чанки, Снипеты, Плагины из категории <strong style="color: black;">[[+name]]</strong>?';
+	$_lang['_elements_']                            = 'Сохранить элементы(плагины, чанки, снипеты,...) в папку <strong style="color: black;">/elements/</strong> в core/components/[[+name]]/? (автоматически запускается при создании пакета)';
 	$_lang['add_dependence_modutil']                = 'Добавить зависимость от <strong style="color: black;">modUtilities</strong>';
 	$_lang['add_dependence_extraExt']               = 'Добавить зависимость от <strong style="color: black;">ExtraExt</strong>';
 
