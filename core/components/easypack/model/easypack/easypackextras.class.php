@@ -17,9 +17,9 @@
 			return (!empty($value) and !is_null($value)) ? $value : $default;
 		}
 
-		public function getSettings()
+		public function getSettings($default = NULL)
 		{
-			$Settings = $this->getProperty('settings');
+			$Settings = $this->getProperty('settings', $default);
 			if ($Settings) {
 				$Settings = @json_decode($Settings, 1);
 				if ($Settings and is_array($Settings)) {
@@ -29,9 +29,9 @@
 			return [];
 		}
 
-		public function getSnippets()
+		public function getSnippets($default = NULL)
 		{
-			$Snippets = $this->getProperty('snippets');
+			$Snippets = $this->getProperty('snippets', $default);
 			if ($Snippets) {
 				$Snippets = @json_decode($Snippets, 1);
 				if ($Snippets and is_array($Snippets)) {
@@ -41,9 +41,9 @@
 			return [];
 		}
 
-		public function getPlugins()
+		public function getPlugins($default = NULL)
 		{
-			$Plugins = $this->getProperty('plugins');
+			$Plugins = $this->getProperty('plugins', $default);
 			if ($Plugins) {
 				$Plugins = @json_decode($Plugins, 1);
 				if ($Plugins and is_array($Plugins)) {
@@ -53,22 +53,24 @@
 			return [];
 		}
 
-		public function getElem($k, $format = NULL, $formatTemplate = NULL)
+		public function getElem($k, $default = NULL)
 		{
 			switch ($k) {
 				case 'snippets':
-					return $this->getSnippets();
+					return $this->getSnippets($default);
 				case 'chunks':
-					return $this->getChunks();
+					return $this->getChunks($default);
 				case 'plugins':
-					return $this->getPlugins();
+					return $this->getPlugins($default);
+				case 'templates':
+					return $this->getTemplates($default);
 			}
-			return parent::get($k, $format, $formatTemplate);
+			return $this->getProperty($k, $default);
 		}
 
-		public function getTemplates()
+		public function getTemplates($default = NULL)
 		{
-			$Templates = $this->getProperty('templates');
+			$Templates = $this->getProperty('templates', $default);
 			if ($Templates) {
 				$Templates = @json_decode($Templates, 1);
 				if ($Templates and is_array($Templates)) {
@@ -78,9 +80,9 @@
 			return [];
 		}
 
-		public function getMenus()
+		public function getMenus($default = NULL)
 		{
-			$Menus = $this->getProperty('menus');
+			$Menus = $this->getProperty('menus', $default);
 			if ($Menus) {
 				$Menus = @json_decode($Menus, 1);
 				if ($Menus and is_array($Menus)) {
@@ -90,9 +92,9 @@
 			return [];
 		}
 
-		public function getChunks()
+		public function getChunks($default = NULL)
 		{
-			$Chunks = $this->getProperty('chunks');
+			$Chunks = $this->getProperty('chunks', $default);
 			if ($Chunks) {
 				$Chunks = @json_decode($Chunks, 1);
 				if ($Chunks and is_array($Chunks)) {
@@ -102,9 +104,9 @@
 			return [];
 		}
 
-		public function getResources()
+		public function getResources($default = NULL)
 		{
-			$resources = $this->getProperty('resources');
+			$resources = $this->getProperty('resources', $default);
 			if ($resources) {
 				$resources = @json_decode($resources, 1);
 				if ($resources and is_array($resources)) {
@@ -114,9 +116,9 @@
 			return [];
 		}
 
-		public function getRest()
+		public function getRest($default = NULL)
 		{
-			$elem = $this->getProperty('modUtilitiesRest');
+			$elem = $this->getProperty('modUtilitiesRest', $default);
 			if ($elem) {
 				$elem = @json_decode($elem, 1);
 				if ($elem and is_array($elem)) {
@@ -126,9 +128,9 @@
 			return [];
 		}
 
-		public function getTables()
+		public function getTables($default = NULL)
 		{
-			$elem = $this->getProperty('tables');
+			$elem = $this->getProperty('tables', $default);
 			if ($elem) {
 				$elem = @json_decode($elem, 1);
 				if ($elem and is_array($elem)) {
@@ -138,9 +140,9 @@
 			return [];
 		}
 
-		public function getRequires()
+		public function getRequires($default = NULL)
 		{
-			$elem = $this->getProperty('requires');
+			$elem = $this->getProperty('requires', $default);
 			if ($elem) {
 				$elem = @json_decode($elem, 1);
 				if ($elem and is_array($elem)) {
@@ -150,9 +152,9 @@
 			return [];
 		}
 
-		public function getRequiresExtras()
+		public function getRequiresExtras($default = NULL)
 		{
-			$elem = $this->getProperty('requires');
+			$elem = $this->getProperty('requires', $default);
 			if ($elem) {
 				$elem = @json_decode($elem, 1);
 				if ($elem and is_array($elem)) {

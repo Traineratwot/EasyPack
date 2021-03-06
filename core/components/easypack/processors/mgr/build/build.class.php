@@ -49,9 +49,12 @@
 		 * @var array
 		 */
 		private $reqExtras = [];
+		private $permissions = 0777;
 
 		public function process()
 		{
+			$this->permissions = $this->modx->getOption('new_file_permissions',null,'0777');
+
 			try {
 				$this->tstart = microtime(TRUE);
 				set_time_limit(0);
@@ -423,7 +426,6 @@
 			$k2 = 'setting_' . $key . '_desc';
 
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
-			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$prefix = $this->modx->config['table_prefix'];
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE name in('{$k1}','{$k2}')");
 			if ($_lang) {
@@ -445,7 +447,7 @@
 				$txt .= "\n" . '$_lang[\'setting_' . $key . '_desc\'] = \'' . $lex . '\';';
 			}
 			if ($txt) {
-				if (!@mkdir($concurrentDirectory = dirname($langPath), $permissions, 1) && !is_dir($concurrentDirectory)) {
+				if (!@mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				if (!file_exists($langPath)) {
@@ -461,7 +463,6 @@
 			$_lang = NULL;
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
 			$prefix = (string)$this->modx->config['table_prefix'];
-			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE `name` LIKE '%{$area}%'");
 			if ($_lang) {
 				$_lang = $_lang->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -479,7 +480,7 @@
 			}
 			if ($lex and $area) {
 				$txt = "\n" . '$_lang[\'area_' . $area . '\'] = \'' . $lex . '\';';
-				if (!mkdir($concurrentDirectory = dirname($langPath), $permissions, 1) && !is_dir($concurrentDirectory)) {
+				if (!mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				@file_put_contents($langPath, $txt, FILE_APPEND);
@@ -501,7 +502,7 @@
 			}
 		}
 
-		public function _GenResolver($categoryVehicle)
+		public function _GenResolver(modTransportVehicle &$categoryVehicle)
 		{
 			$code = [];
 			$xml_schema_file = $this->modelPath . $this->PKG_NAME_LOWER . '/' . $this->PKG_NAME_LOWER . '.mysql.schema.xml';
@@ -540,12 +541,12 @@
 			]);
 		}
 
-		public function _addReqExtra($categoryVehicle)
+		public function _addReqExtra(modTransportVehicle &$categoryVehicle)
 		{
 			if (isset($this->reqExtras) and is_array($this->reqExtras) and !empty($this->reqExtras)) {
 				$packages = json_encode($this->reqExtras, 256);
 				$txt = include MODX_CORE_PATH . 'components/easypack/processors/mgr/build/examples/extras.download.php';
-				$this->tmp_resolver = tempnam(sys_get_temp_dir(), 'aaa'.$this->PKG_NAME_LOWER . '_resolver_');
+				$this->tmp_resolver = tempnam(sys_get_temp_dir(), 'aaa' . $this->PKG_NAME_LOWER . '_resolver_');
 				if (!file_exists($this->tmp_resolver)) {
 					$this->tmp_resolver = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/tmp' . $this->PKG_NAME_LOWER . '.resolver';
 					if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), 0777, 1) && !is_dir($concurrentDirectory)) {
@@ -583,6 +584,60 @@
 					unset($response);
 				}
 			}
+		}
+
+		public function _addCustomFile(modTransportVehicle &$categoryVehicle)
+		{
+			$customPaths = $this->Easypack->get('customPaths');
+			if ($customPaths) {
+				$customPaths = json_decode($customPaths, 1);
+
+
+				foreach ($customPaths as $customPath) {
+					$source = $customPath['pathToFile'];
+					$target1 = $customPath['target1'] ?: 'MODX_BASE_PATH';
+					$target2 = MODX_BASE_PATH . ($customPath['target2'] ?: dirname($source));
+					switch ($target1) {
+						case 'MODX_CORE_PATH':
+							$target2 = str_replace(MODX_CORE_PATH, '', $target2);
+							break;
+						case 'MODX_ASSETS_PATH':
+							$target2 = str_replace(MODX_ASSETS_PATH, '', $target2);
+							break;
+						case 'MODX_PROCESSORS_PATH':
+							$target2 = str_replace(MODX_PROCESSORS_PATH, '', $target2);
+
+							break;
+						case 'MODX_CONNECTORS_PATH':
+							$target2 = str_replace(MODX_CONNECTORS_PATH, '', $target2);
+
+							break;
+						case 'MODX_MANAGER_PATH':
+							$target2 = str_replace(MODX_MANAGER_PATH, '', $target2);
+
+							break;
+						case 'MODX_BASE_PATH':
+							$target2 = str_replace(MODX_BASE_PATH, '', $target2);
+							break;
+						default:
+							continue 2;
+					}
+					$target2 = trim($target2, '/');
+					$target = "return {$target1} . '{$target2}/';";
+					if ($target and $source) {
+						if (file_exists(MODX_BASE_PATH . $source)) {
+							$categoryVehicle->resolve('file', [
+								'source' => MODX_BASE_PATH . $source,
+								'target' => $target,
+							]);
+						} else {
+							throw new Exception('file not found: ' . $source);
+						}
+					}
+				}
+			}
+
+
 		}
 
 		public function _addModUtilRest($UPDATE_OBJECT = TRUE)
@@ -692,6 +747,8 @@
 					'source' => MODX_BASE_PATH . $this->Easypack->getProperty('core'),
 					'target' => "return MODX_CORE_PATH . 'components/';",
 				]);
+
+				$this->_addCustomFile($categoryVehicle);
 
 				if ($this->Easypack->getProperty('php_resolver')) {
 					$categoryVehicle->resolve('php', [

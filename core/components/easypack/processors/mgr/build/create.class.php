@@ -32,9 +32,11 @@
 		 * @var string[]
 		 */
 		public $classes;
+		public $permissions = 0777;
 
 		public function process()
 		{
+			$this->permissions = $this->modx->getOption('new_file_permissions',null,'0777');
 			try {
 				$this->tstart = microtime(1);
 				$id = $this->getProperty('id');
@@ -145,14 +147,13 @@
 
 		public function generate()
 		{
-			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			foreach ($this->directories as $key => $value) {
 				if (!is_dir($value)) {
-					if (!@mkdir($value, $permissions, 1) && !is_dir($value)) {
-						throw new RuntimeException($this->modx->lexicon('failCreate_core_no_created', ['path' => $value]));
+					if (!@mkdir($value, 0777, 1) && !is_dir($value)) {
+						throw new RuntimeException($this->modx->lexicon('failCreate_folder', ['path' => $value]));
 					}
 					if (!is_writable($value)) {
-						throw new RuntimeException($this->modx->lexicon('core_no_writable', ['path' => $value]));
+						throw new RuntimeException($this->modx->lexicon('no_writable', ['path' => $value]));
 					}
 				}
 			}
@@ -171,6 +172,17 @@
 				$this->Easypack->save();
 			}
 
+
+			$q = "select id from {$this->prefix}categories where `category` LIKE '{$this->PKG_NAME}' OR `category` LIKE '{$this->PKG_NAME_LOWER}'";
+			$categoryId = $this->modx->query($q);
+			if ($categoryId) {
+				$categoryId = (int)$categoryId->fetch(PDO::FETCH_COLUMN);
+				if ($categoryId == 0) {
+					$cat = $this->modx->newObject('modCategory');
+					$cat->set('category', $this->PKG_NAME);
+					$cat->save();
+				}
+			}
 
 			$this->_prepareResources();
 			if ((bool)$this->getProperty('create__model_') and !empty($this->tables)) {
@@ -417,7 +429,6 @@
 			$k2 = 'setting_' . $key . '_desc';
 
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
-			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
 			$prefix = $this->modx->config['table_prefix'];
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE name in('{$k1}','{$k2}')");
 			if ($_lang) {
@@ -439,7 +450,7 @@
 				$txt .= '$_lang[\'setting_' . $key . '_desc\'] = \'' . $lex . '\';' . "\n";
 			}
 			if ($txt) {
-				if (!@mkdir($concurrentDirectory = dirname($langPath), $permissions, 1) && !is_dir($concurrentDirectory)) {
+				if (!@mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				if (!file_exists($langPath)) {
@@ -456,7 +467,7 @@
 			$k1 = '';
 			$coreLangPath = MODX_CORE_PATH . 'lexicon/' . $lang . '/setting.inc.php';
 			$prefix = $this->modx->config['table_prefix'];
-			$permissions = (int)($this->modx->config['new_file_permissions'] ?: 0777);
+
 			$_lang = $this->modx->query("SELECT name, `value` FROM {$prefix}lexicon_entries WHERE `name` = '{$k1}'");
 			if ($_lang) {
 				$_lang = $_lang->fetchAll(PDO::FETCH_KEY_PAIR);
@@ -470,7 +481,7 @@
 			if (isset($_lang['area_' . $area])) {
 				$lex = $_lang['area_' . $area];
 				$txt = '$_lang[\'area_' . $area . '\'] = \'' . $lex . '\';';
-				if (!@mkdir($concurrentDirectory = dirname($langPath), $permissions, 1) && !is_dir($concurrentDirectory)) {
+				if (!@mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				@file_put_contents($langPath, $txt, FILE_APPEND);
@@ -507,24 +518,25 @@
 				'modChunk' => 'chunks',
 				'modPlugin' => 'plugins',
 			];
-			$q = "select id from {$this->prefix}categories where `category`='{$PKG_NAME}' OR `category`='{$PKG_NAME_LOWER}'";
+			$q = "select id from {$this->prefix}categories where `category` LIKE '{$PKG_NAME}' OR `category` LIKE '{$PKG_NAME_LOWER}'";
 			$categoryId = $this->modx->query($q);
 			if ($categoryId) {
-				$categoryId = $categoryId->fetch(PDO::FETCH_COLUMN);
-				foreach ($classes as $class => $v) {
-					$elems = $this->modx->getIterator($class, ['category' => $categoryId]);
-					$e = $this->Easypack->getElem($v);
-					foreach ($elems as $elem) {
-						$name = $elem->get('name');
-						$e[] = $name;
+				$categoryId = (int)$categoryId->fetch(PDO::FETCH_COLUMN);
+				if ($categoryId > 0) {
+					foreach ($classes as $class => $v) {
+						$elems = $this->modx->getIterator($class, ['category' => $categoryId]);
+						$e = $this->Easypack->getElem($v);
+						foreach ($elems as $elem) {
+							$name = $elem->get('name');
+							$e[] = $name;
+						}
+						$e = array_unique($e);
+						if (!empty($e)) {
+							$this->Easypack->set($v, $e);
+						}
 					}
-					$e = array_unique($e);
-					if (!empty($e)) {
-						$this->Easypack->set($v, $e);
-					}
+					$this->Easypack->save();
 				}
-				$this->Easypack->save();
-
 			}
 
 		}

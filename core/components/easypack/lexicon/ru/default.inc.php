@@ -57,6 +57,7 @@
 	$_lang['EasyPack.description.tables']           = 'Массив таблиц вашего компонента, база данных стандартная';
 	$_lang['EasyPack.description.changelog']        = 'Путь к файлу истории изменений(changelog)';
 	$_lang['EasyPack.description.readme']           = 'Путь к файлу Readme';
+	$_lang['EasyPack.description.customPaths']      = 'пути к другим файлам ';
 
 	$_lang['EasyPack.description.chunks']           = 'Массив чанков';
 	$_lang['EasyPack.description.snippets']         = 'Массив снипетов';
@@ -68,6 +69,7 @@
 	$_lang['EasyPack.description.dependence']       = 'Зависимости от других компонентов с версией не раньше текущей(если вы внесете изменения в ручную они не затруться)';
 
 	$_lang['EasyPack.core']                         = 'Путь к core';
+	$_lang['EasyPack.customPaths']                  = 'Другие файлы';
 	$_lang['EasyPack.description.core']             = 'Путь к core от MODX_BASE_PATH, если пути стандартны оставьте пустым';
 	$_lang['EasyPack.assets']                       = 'Путь к assets';
 	$_lang['EasyPack.description.assets']           = 'Путь к assets от MODX_BASE_PATH, если пути стандартны оставьте пустым';
@@ -77,11 +79,13 @@
 	$_lang['EasyPack.compare.l']                    = '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">> </span> <span class="two">[[+two]]</span>';
 	$_lang['EasyPack.compare.Eq']                   = '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">==</span> <span class="two">[[+two]]</span>';
 
-	$_lang['core_no_created']                       = 'Папка core не существует "[[+path]]"';
-	$_lang['core_no_writable']                      = 'Папка core существует, но не доступна для записи "[[+path]]"';
+	$_lang['core_no_created']                       = 'Папка core не существует <strong>"[[+path]]"</strong>';
+	$_lang['no_writable']                           = 'Папка существует, но не доступна для записи <strong>"[[+path]]"</strong>';
 	$_lang['core_no_define']                        = 'Папка core не указанна';
-	$_lang['failCreate_core_no_created']            = 'Не удалось создать папку core "[[+path]]"';
-	$_lang['failCreate_folder']                     = 'Не удалось создать папку "[[+path]]"';
+	$_lang['failCreate_folder']                     = 'Не удалось создать папку <strong>"[[+path]]"</strong>';
+	$_lang['EasyPack.target1']                      = 'константа пути';
+	$_lang['EasyPack.target2']                      = 'путь';
 
 	$_lang['EasyPack.modUtilitiesRest']             = 'Rest (modUtilities)';
+	$_lang['EasyPack.createFromFolder']             = 'Создать из файлов';
 	$_lang['EasyPack.description.modUtilitiesRest'] = 'выберите rest`s для импорта, компонент modUtilities автоматически добавиться в зависимость ';

@@ -1,7 +1,29 @@
+var lexicons
 Ext.onReady(function() {
 	MODx.add({
 		xtype: 'EasyPack-panel-home'
 	})
+	lexicons = {
+		'extras': extraExt.settings.get('lexicons-field-extras'),
+		'lang': extraExt.settings.get('lexicons-field-lang'),
+		'topic': extraExt.settings.get('lexicons-field-topic'),
+	}
+	if(lexicons.extras) {
+		Ext.getCmp('lexicons-field-extras').setValue(lexicons.extras).fireEvent('select')
+
+	}
+	setTimeout(function() {
+		if(lexicons.extras) {
+			if(lexicons.lang) {
+				Ext.getCmp('lexicons-field-lang').setValue(lexicons.lang).fireEvent('select')
+				if(lexicons.topic) {
+					Ext.getCmp('lexicons-field-topic').setValue(lexicons.topic).fireEvent('select')
+				}
+			}
+
+		}
+	},500)
+
 })
 var EasyPack = function(config) {
 	config = config || {}
@@ -374,7 +396,41 @@ EasyPack.panel.Home = function(config) {
 				source: MODx.config.default_media_source,
 			}
 		},
-
+		{
+			dataIndex: 'customPaths',
+			width: 330,
+			header: _('EasyPack.customPaths'),
+			tooltip: _('EasyPack.description.customPaths'),
+			sortable: true,
+			renderer: extraExt.grid.renderers.JSON,
+			editor: {xtype: 'textfield'},
+			extraExtRenderer: {
+				popup: true,
+			},
+			extraExtEditor: {
+				xtype: extraExt.inputs.infinity.xtype,
+				field: {
+					xtype: extraExt.inputs.popup.xtype,
+					// prepare: function(data) {
+					//
+					// },
+					// dePrepare: function(data) {
+					//
+					// },
+					fields: [
+						{
+							xtype: MODx.combo.Boolean.xtype,
+							name: 'pathToFile',
+							fieldLabel: _('pathToFile'),
+						},
+						{
+							xtype: 'url',
+							name: 'target',
+						},
+					]
+				},
+			}
+		},
 		{
 			dataIndex: 'requires',
 			width: 330,
@@ -387,10 +443,6 @@ EasyPack.panel.Home = function(config) {
 				popup: true,
 			},
 			editor: {xtype: 'textarea'},
-			extraExtEditor: {
-				xtype: extraExt.inputs.popup.xtype,
-				fields: []
-			},
 		},
 		{
 			dataIndex: 'readme',
@@ -641,6 +693,7 @@ EasyPack.panel.Home = function(config) {
 									'settings',
 									'core',
 									'assets',
+									'customPaths',
 									'requires',
 									'readme',
 									'changelog',
@@ -679,11 +732,18 @@ EasyPack.panel.Home = function(config) {
 										handler: this.build
 									})
 									m.push({
-										icon: '<i class="fal fa-file"></i>',
+										icon: '<i class="fad fa-file"></i>',
 										text: _('EasyPack.getResolver'),
 										grid: grid,
 										rowIndex: rowIndex,
 										handler: this.getResolver
+									})
+									m.push({
+										icon: '<i class="fad fa-folder-plus"></i>',
+										text: _('EasyPack.createFromFolder'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.createFromFolder
 									})
 									// m.push({
 									// 	text: _('EasyPack.test'),
@@ -742,14 +802,14 @@ EasyPack.panel.Home = function(config) {
 												fn: function(r) {
 													if(!r.success) {
 														MODx.msg.status({
-															title: 'building',
+															title: _('EasyPack.build'),
 															message: 'Ошибка',
 															delay: 3
 														})
 													} else {
 														console.log(r)
 														MODx.msg.status({
-															title: 'building',
+															title: _('EasyPack.build'),
 															message: `Готово ${r.object.time}<br>
 														<a href="${r.object.path}" target="_blank" >Скачать</a>
 														`,
@@ -784,6 +844,41 @@ EasyPack.panel.Home = function(config) {
 										updateId: cs,
 										updateData: data,
 									}).show()
+								},
+								createFromFolder: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/build/createfromfolder',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													if(!r.success) {
+														MODx.msg.status({
+															title: _('EasyPack.createFromFolder'),
+															message: 'Ошибка',
+															delay: 3
+														})
+													} else {
+														console.log(r)
+														MODx.msg.status({
+															title: _('EasyPack.createFromFolder'),
+															message: _(r.message),
+															delay: 3
+														})
+													}
+													self.refresh()
+												}, scope: true
+											}
+										}
+									})
 								},
 								test: function() {
 									var cs = this.getSelectedAsList()
@@ -846,13 +941,277 @@ EasyPack.panel.Home = function(config) {
 						]
 					},
 					{
+						title: _('lexicon_management'),
+						id: 'lexicons-tabs',
+						xtype: 'panel',
+						items: [
+							{
+								xtype: 'panel',
+								layout: 'anchor',
+								items: [
+									{
+										xtype: 'form',
+										anchor: '99.8%',
+										items: [
+											{
+												xtype: 'toolbar',
+												items: [
+													{
+														xtype: MODx.combo.ComboBox.xtype,
+														name: 'extras',
+														id: 'lexicons-field-extras',
+														action: 'mgr/get',
+														fields: ['id', 'name'],
+														lazyRender: false,
+														baseParams: {
+															action: 'mgr/get', combo: 1, sort: 'id',
+															dir: 'DESK',
+														},
+														valueField: 'id',
+														displayField: 'name',
+														url: easypackConnectorUrl,
+														listeners: {
+															'select': function() {
+																extraExt.settings.set(this.id, this.getValue())
+																extraExt.settings.set('lexicons-field-lang', null)
+																extraExt.settings.set('lexicons-field-topic', null)
+																try {
+																	var lang = Ext.getCmp('lexicons-field-lang')
+																	var topic = Ext.getCmp('lexicons-field-topic')
+																	lang.setDisabled(true)
+																	topic.setDisabled(true)
+																	lang.store.baseParams.extras = this.getValue()
+																	topic.store.baseParams.extras = this.getValue()
+
+																	lang.bindStore(lang.getStore())
+																	lang.setDisabled(false)
+																	if(lang.getValue()){
+																		lang.fireEvent('select')
+																	}else{
+																		topic.setValue('')
+																	}
+																} catch(e) {
+																	console.warn(e)
+																}
+															}
+														}
+													},
+													{
+														xtype: 'panel',
+														html: '<i class="fas fa-chevron-right"></i>&nbsp;&nbsp;'
+													},
+													{
+														xtype: MODx.combo.ComboBox.xtype,
+														name: 'lang',
+														forceSelection: false,
+														editable: true,
+														id: 'lexicons-field-lang',
+														disabled: true,
+														fields: ['name'],
+														lazyRender: false,
+														baseParams: {
+															action: 'mgr/lexicon/lang/get', combo: 1, sort: 'id',
+															dir: 'DESK',
+														},
+														displayField: 'name',
+														valueField: 'name',
+														url: easypackConnectorUrl,
+														listeners: {
+															'select': function() {
+																extraExt.settings.set(this.id, this.getValue())
+																extraExt.settings.set('lexicons-field-topic', null)
+																try {
+																	var topic = Ext.getCmp('lexicons-field-topic')
+																	topic.setDisabled(true)
+																	topic.baseParams.lang = this.getValue()
+																	topic.store.baseParams.lang = this.getValue()
+																	topic.bindStore(topic.getStore())
+																	topic.setDisabled(false)
+																	if(topic.getValue()){
+																		topic.fireEvent('select')
+																	}
+																} catch(e) {
+
+																}
+															}
+														}
+													},
+													{
+														xtype: 'panel',
+														html: '<i class="fas fa-chevron-right"></i>&nbsp;&nbsp;'
+													},
+													{
+														xtype: MODx.combo.ComboBox.xtype,
+														name: 'topic',
+														id: 'lexicons-field-topic',
+														disabled: true,
+														forceSelection: false,
+														editable: true,
+														fields: ['name'],
+														lazyRender: false,
+														baseParams: {
+															action: 'mgr/lexicon/topic/get', combo: 1, sort: 'id',
+															dir: 'DESK',
+														},
+														displayField: 'name',
+														valueField: 'name',
+														url: easypackConnectorUrl,
+														listeners: {
+															'select': function() {
+																extraExt.settings.set(this.id, this.getValue())
+																var table = Ext.getCmp('EasyPack-lexicon-table')
+																try {
+																	table.store.baseParams.extras = this.baseParams.extras
+																	table.store.baseParams.lang = this.baseParams.lang
+																	table.store.baseParams.topic = this.getValue()
+																	Ext.util.Cookies.set('easypack.lex.extras',this.baseParams.extras)
+																	Ext.util.Cookies.set('easypack.lex.lang',this.baseParams.lang)
+																	Ext.util.Cookies.set('easypack.lex.topic',this.getValue())
+																	//-----------
+																} catch(e) {
+
+																}
+																table.getBottomToolbar().doRefresh()
+															}
+														}
+													},
+												]
+											}
+										]
+									},
+									{
+										xtype: extraExt.grid.xtype,
+										id: 'EasyPack-lexicon-table',
+										name: _('lexicon'),
+										createBtnText: _('EasyPack.createString'),
+										anchor: '99.8%',
+										columns: [
+											{
+												dataIndex: 'key',
+												width: 200,
+												header: _('key'),
+												sortable: true,
+												renderer: extraExt.grid.renderers.default
+											},
+											{
+												dataIndex: 'value',
+												width: 800,
+												header: _('value'),
+												sortable: true,
+												extraExtRenderer: {
+													popup: true
+												},
+												extraExtEditor: {
+													xtype: 'modx-texteditor',
+													resizable: true,
+													mimeType: 'text/html',
+													modxTags: true,
+													height: this.height / 1.85,
+													enableKeyEvents: true,
+												},
+												editor: {xtype: 'textarea'},
+												renderer: extraExt.grid.renderers.HTML
+											},
+										],
+										pageSize: 50,
+										fields: [
+											'key',
+											'value',
+										],
+										autosave: true,
+										nameField: 'key',
+										keyField: 'key',
+										leftTbar: function() {
+											return [
+												{
+													xtype: 'button', // Перемещаем сюда нашу кнопку
+													text: '<i class="fas fa-plus"></i>&nbsp;' + _('EasyPack.createLang'),
+													handler: this.createLang,
+													scope: this,
+												},
+												// {
+												// 	xtype: 'button', // Перемещаем сюда нашу кнопку
+												// 	text: '<i class="fas fa-plus"></i>&nbsp;' + _('EasyPack.createTopic'),
+												// 	handler: this.createTopic,
+												// 	scope: this,
+												// }
+											]
+										},
+										url: easypackConnectorUrl,
+										extraExtSearch: true,
+										extraExtUpdate: true,
+										extraExtCreate: true,
+										extraExtDelete: true,
+										requestDataType: 'form',
+										action: 'mgr/lexicon/topic/getlist',
+										save_action: 'mgr/lexicon/topic/update',
+										create_action: 'mgr/lexicon/topic/update',
+										delete_action: 'mgr/lexicon/topic/update',
+										createLang: function() {
+											console.log('test')
+											var baseParams = Object.assign({}, this.store.baseParams)
+											baseParams.action = 'mgr/lexicon/lang/clone'
+											var url = this.url
+											var fields = [
+												{
+													name: 'newLang',
+													id: 'lexicons-window-field-lang',
+													xtype: Ext.form.ComboBox.xtype,
+													forceSelection: false,
+													editable: true,
+													typeAhead: true,
+													anchor: '100%',
+													triggerAction: 'all',
+													lazyRender: true,
+													mode: 'local',
+													store: new Ext.data.JsonStore({
+														id: 0,
+														fields: [
+															'code',
+														],
+														data: [
+															{code: 'ru'},
+															{code: 'en'},
+															{code: 'uk'},
+															{code: 'de'},
+														]
+													}),
+													valueField: 'code',
+													displayField: 'code',
+													fieldLabel: _('language'),
+
+												},
+											]
+											MODx.load({
+												xtype: 'easypack-lexicon-window',
+												title: _('EasyPack.createLang'),
+												baseParams: baseParams,
+												closeAction: 'close',
+												url: url,
+												fields: fields
+											}).show()
+										},
+										createTopic: function() {
+											MODx.load({
+												xtype: 'easypack-lexicon-window',
+												title: _('EasyPack.createTopic'),
+												type: 'add',
+												table: this,
+											}).show()
+										}
+									}
+								]
+							},
+
+						]
+					},
+					{
 						title: 'Wiki',
 						id: 'Wiki-tabs',
 						xtype: extraExt.tabs.xtype,
 						deferredRender: false,
 						border: true,
 						items: []
-
 					}
 				]
 			}
@@ -889,24 +1248,25 @@ EasyPack.window.add = function(config) {
 		}
 		return ''
 	}
-	config.dependence = function() {
-		if(config.updateData.tables) {
-			try {
-				var data = JSON.parse(config.updateData.requires)
-				var extras = Object.keys(data?.extras) || []
-				var res = []
-				for(var i of extras) {
-					var t = {}
-					t['package_name'] = i
-					res.push(t)
-				}
-				return res
-			} catch(e) {
-
-			}
-			return ''
-		}
-	}
+	// config.dependence = function() {
+	// 	if(config.updateData.tables) {
+	// 		try {
+	// 			var data = JSON.parse(config.updateData.requires)
+	// 			var extras = Object.keys(data?.extras) || []
+	// 			var res = []
+	// 			for(var i of extras) {
+	// 				var t = {}
+	// 				t['package_name'] = i
+	// 				res.push(t)
+	// 			}
+	// 			return res
+	// 		} catch(e) {
+	//
+	// 		}
+	// 		return ''
+	// 	}
+	// }
+	var target2_id = Ext.id()
 	var fields = [
 		{
 			xtype: 'hidden',
@@ -1129,7 +1489,7 @@ EasyPack.window.add = function(config) {
 		// },
 		{
 			xtype: extraExt.browser.xtype,
-			canSelectFolder: false,
+			canSelectFile: false,
 			fieldLabel: _('EasyPack.core'),
 			toolTip: _('EasyPack.description.core'),
 			listeners: ToolTip,
@@ -1144,7 +1504,7 @@ EasyPack.window.add = function(config) {
 		},
 		{
 			xtype: extraExt.browser.xtype,
-			canSelectFolder: false,
+			canSelectFile: false,
 			fieldLabel: _('EasyPack.assets'),
 			toolTip: _('EasyPack.description.assets'),
 			listeners: ToolTip,
@@ -1158,35 +1518,142 @@ EasyPack.window.add = function(config) {
 			openTo: '/core/components',
 		},
 		{
-			xtype: 'textarea',
-			name: 'requires',
-			fieldLabel: _('EasyPack.requires'),
-			tooltip: _('EasyPack.description.requires'),
-			id: 'add-' + this.ident + '-requires',
+			fieldLabel: _('EasyPack.customPaths'),
+			toolTip: _('EasyPack.description.customPaths'),
+			name: 'customPaths',
+			value: config.updateData['customPaths'] || null,
 			anchor: '99%',
-			value: config.updateData['requires'] || null,
-			allowBlank: true,
-			rootVisible: true,
+			xtype: extraExt.inputs.infinity.xtype,
+			field: {
+				xtype: extraExt.inputs.popup.xtype,
+				fields: [
+					{
+						xtype: extraExt.browser.xtype,
+						fieldLabel: _('pathToFile'),
+						name: 'pathToFile',
+						allowBlank: true,
+						rootVisible: true,
+						source: MODx.config.default_media_source,
+					},
+					{
+						xtype: Ext.form.ComboBox.xtype,
+						typeAhead: true,
+						triggerAction: 'all',
+						lazyRender: true,
+						mode: 'local',
+						store: new Ext.data.ArrayStore({
+							id: 0,
+							fields: [
+								'const',
+							],
+							data: [
+								['MODX_CORE_PATH'],
+								['MODX_ASSETS_PATH'],
+								['MODX_PROCESSORS_PATH'],
+								['MODX_CONNECTORS_PATH'],
+								['MODX_MANAGER_PATH'],
+								['MODX_BASE_PATH'],
+							]
+						}),
+						valueField: 'const',
+						displayField: 'const',
+						fieldLabel: _('EasyPack.target1'),
+						name: 'target1',
+						listeners: {
+							scope: target2_id,
+							'select': function() {
+								console.info(Ext.getCmp(this))
+							}
+						}
+					},
+					{
+						xtype: extraExt.browser.xtype,
+						name: 'target2',
+						fieldLabel: _('EasyPack.target2'),
+						id: target2_id,
+						canSelectFile: false,
+					},
+				]
+			},
+
 		},
 		{
-			xtype: extraExt.inputs.modComboSuper.xtype,
-			name: 'dependence',
-			fieldLabel: _('EasyPack.dependence'),
-			tooltip: _('EasyPack.description.dependence'),
-			id: 'add-' + this.ident + '-dependence',
+			xtype: extraExt.inputs.popup.xtype,
+			name: 'requires',
+			value: config.updateData.requires || null,
+			fieldLabel: _('EasyPack.requires'),
 			anchor: '99%',
-			url: MODx.config.connector_url,
-			baseParams: {
-				action: 'workspace/packages/getlist', combo: 1, sort: 'package_name',
-				dir: 'DESK',
+			id: 'add-' + this.ident + '-requires',
+			prepare: function(data) {
+				var newData = {
+					extras: {},
+					php: data.php,
+					modx: data.modx,
+				}
+				if(typeof data.extras == 'string') {
+					data.extras = [data.extras]
+				}
+				for(const extrasKey in data.extras) {
+					if(!data.extras.hasOwnProperty(extrasKey)) {
+						continue
+					}
+					newData.extras[data.extras[extrasKey]] = {
+						'service_url': 'modstore.pro'
+					}
+				}
+				return newData
 			},
-			value: config.dependence() || null,
-			forceSelection: true,
-			fields: ['package_name'],
-			allowBlank: true,
-			valueField: 'package_name',
-			displayField: 'package_name',
-
+			dePrepare: function(data) {
+				var newData = {
+					extras: [],
+					php: '',
+					modx: '',
+				}
+				if(data.hasOwnProperty('extras')) {
+					if(typeof data.extras == 'string') {
+						data.extras = [data.extras]
+					}
+					for(const extrasKey in data.extras) {
+						if(!data.extras.hasOwnProperty(extrasKey)) {
+							continue
+						}
+						newData.extras.push(extrasKey)
+					}
+				}
+				return newData
+			},
+			fields: [
+				{
+					xtype: 'textfield',
+					name: '',
+					emptyText: '>=7.3',
+					rootVisible: true,
+				},
+				{
+					xtype: 'textfield',
+					name: '',
+					emptyText: MODx.config.settings_version,
+					rootVisible: true,
+				},
+				{
+					xtype: extraExt.inputs.modComboSuper.xtype,
+					name: 'extras',
+					fieldLabel: _('EasyPack.dependence'),
+					tooltip: _('EasyPack.description.dependence'),
+					id: 'add-' + this.ident + '-dependence',
+					anchor: '99%',
+					url: MODx.config.connector_url,
+					baseParams: {
+						action: 'workspace/packages/getlist', combo: 1, sort: 'package_name',
+						dir: 'DESK',
+					},
+					forceSelection: true,
+					fields: ['package_name'],
+					allowBlank: true,
+					valueField: 'package_name',
+					displayField: 'package_name',
+				},
+			],
 		},
 
 		{
@@ -1484,3 +1951,11 @@ EasyPack.window.create = function(config) {
 Ext.extend(EasyPack.window.create, extraExt.xTypes[extraExt.window.xtype]) // Расширяем MODX.Window
 Ext.reg('EasyPack-window-create', EasyPack.window.create) // Регистрируем новый xtype
 //добавление категории
+
+extraExt.create(
+	'easypack-lexicon-window',
+	function(config) {
+		extraExt.xTypes['easypack-lexicon-window'].superclass.constructor.call(this, config) // Магия
+	},
+	MODx.Window
+)

@@ -26,32 +26,21 @@
 				$this->properties['requires'] = [];
 			}
 			$this->setProperty('date', date(DATE_ATOM));
-			if (isset($this->properties['tables']) and !empty($this->properties['prefix'])) {
-				$tables = [];
-				$tables['tables'] = explode(',', $this->properties['tables']);
+
+			if (isset($this->properties['tables'])) {
+				$tables = json_decode($this->properties['tables'],1);
+				if (empty($tables['prefix'])) {
+					$tables['prefix'] = $this->modx->config['table_prefix'];
+				}
+				if(!is_array($tables['tables'])){
+					$tables['tables'] =[$tables['tables']];
+				}
 				$tables['tables'] = array_map('trim', $tables['tables']);
 				$tables['tables'] = array_unique($tables['tables']);
-				$tables['prefix'] = $this->properties['prefix'];
 				$this->setProperty('tables', json_encode($tables));
 				unset($this->properties['prefix']);
 			}
 
-			if (isset($this->properties['dependence']) and !empty($this->properties['dependence'])) {
-				foreach ($this->properties['dependence'] as $dependence) {
-					if (array_key_exists($dependence, $this->properties['requires']['extras'])) {
-						continue;
-					}
-					$dd = $this->getPackageInfo($dependence);
-					if ($dd != FALSE) {
-						$this->setDependence($dependence, $dd);
-					}
-				}
-				foreach ($this->properties['requires']['extras'] as $dependence => $v) {
-					if (!in_array($dependence, $this->properties['dependence'])) {
-						unset($this->properties['requires']['extras'][$dependence]);
-					}
-				}
-			}
 
 			foreach ($this->properties as $key => $prop) {
 
@@ -85,7 +74,6 @@
 						break;
 				}
 			}
-
 			return !$this->hasErrors();
 
 		}
