@@ -208,6 +208,7 @@
 			if ((bool)$this->getProperty('create__model_') and (bool)$this->getProperty('generate__admin_tab')) {
 				$this->_generateAdminTab();
 			}
+			$this->Easypack->save();
 		}
 
 		public function _prepareResources()
@@ -334,6 +335,7 @@
 							$this->createModelProcessor($className);
 						}
 						$this->shema = $generator->shema;
+						$this->Easypack->set('tables_shema', $this->shema);
 					} else {
 						throw new Exception('can`t create xml sheme');
 					}

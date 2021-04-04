@@ -22,6 +22,7 @@
 		<field key="php_resolver" dbtype="text" phptype="string" null="true" />
 		<field key="license" dbtype="text" phptype="string" null="true" />
 		<field key="tables" dbtype="text" phptype="string" null="true" />
+		<field key="tables_shema" dbtype="longtext" phptype="string" null="true" />
 		<field key="path_to_last_transport" dbtype="text" phptype="string" null="true" />
 		<field key="package_id" dbtype="int" precision="11" phptype="integer" null="true" />
 		<field key="modUtilitiesRest" dbtype="text" phptype="string" null="true" />

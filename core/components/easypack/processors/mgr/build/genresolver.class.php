@@ -1,24 +1,15 @@
 <?php
 
-	class genResolverProcessor extends modProcessor
+	class genResolverProcessor extends modObjectGetProcessor
 	{
 		public $classKey = 'EasypackExtras';
 
 		public function process()
 		{
-			$id = $this->getProperty('id');
-			if ($id) {
-				$this->Easypack = $this->modx->getObject($this->classKey, $id);
-				if (!$this->Easypack) {
-					return $this->failure($this->classKey . ' object not found', ['$id' => $id, 'line' => __LINE__]);
-				}
-			} else {
-				return $this->failure('id not found', ['line' => __LINE__]);
-			}
 			/* define package names */
-			$this->PKG_NAME = $this->Easypack->getProperty('name');
+			$this->PKG_NAME = $this->object->getProperty('name');
 			$this->PKG_NAME_LOWER = str_replace([' ', '-', '.', '*', '!', '@', '#', '$', '%', '^', '&', '_'], '', mb_strtolower($this->PKG_NAME));
-			$this->modelPath = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/model/';
+			$this->modelPath = MODX_BASE_PATH . $this->object->getProperty('core') . '/model/';
 
 			$txt = $this->_GenResolver();;
 			return $this->success($txt);

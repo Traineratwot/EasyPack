@@ -31,6 +31,7 @@ $xpdo_meta_map['EasypackExtras']= array (
     'php_resolver' => NULL,
     'license' => NULL,
     'tables' => NULL,
+    'tables_shema' => NULL,
     'path_to_last_transport' => NULL,
     'package_id' => NULL,
     'modUtilitiesRest' => NULL,
@@ -160,6 +161,12 @@ $xpdo_meta_map['EasypackExtras']= array (
     'tables' => 
     array (
       'dbtype' => 'text',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'tables_shema' => 
+    array (
+      'dbtype' => 'longtext',
       'phptype' => 'string',
       'null' => true,
     ),

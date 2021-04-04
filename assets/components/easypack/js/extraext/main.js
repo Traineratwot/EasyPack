@@ -739,6 +739,20 @@ EasyPack.panel.Home = function(config) {
 										handler: this.getResolver
 									})
 									m.push({
+										icon: '<i class="fad fa-file"></i>',
+										text: _('EasyPack.getIndexJs'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.getIndexJs
+									})
+									m.push({
+										icon: '<i class="fad fa-file"></i>',
+										text: _('EasyPack.getIndexController'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.getIndexController
+									})
+									m.push({
 										icon: '<i class="fad fa-folder-plus"></i>',
 										text: _('EasyPack.createFromFolder'),
 										grid: grid,
@@ -961,6 +975,62 @@ EasyPack.panel.Home = function(config) {
 										url: easypackConnectorUrl,
 										params: {
 											action: 'mgr/build/genresolver',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													extraExt.util.renderer.openPopup({
+														title: config.title || '',
+														msg: r.message || '',
+														buttons: Ext.MessageBox.CANCEL,
+														icon: Ext.MessageBox.QUESTION,
+														type: 'php'
+													})
+													self.refresh()
+												}, scope: true
+											}
+										}
+									})
+								},
+								getIndexController: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/build/genindexcontroller',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													extraExt.util.renderer.openPopup({
+														title: config.title || '',
+														msg: r.message || '',
+														buttons: Ext.MessageBox.CANCEL,
+														icon: Ext.MessageBox.QUESTION,
+														type: 'php'
+													})
+													self.refresh()
+												}, scope: true
+											}
+										}
+									})
+								},
+								getIndexJs: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/build/genindexjs',
 											id: cs,
 										},
 										listeners: {
