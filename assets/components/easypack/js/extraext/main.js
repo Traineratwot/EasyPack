@@ -745,6 +745,13 @@ EasyPack.panel.Home = function(config) {
 										rowIndex: rowIndex,
 										handler: this.createFromFolder
 									})
+									m.push({
+										icon: '<i class="fad fa-recycle"></i>',
+										text: _('EasyPack.install'),
+										grid: grid,
+										rowIndex: rowIndex,
+										handler: this.install
+									})
 									// m.push({
 									// 	text: _('EasyPack.test'),
 									// 	grid: grid,
@@ -870,6 +877,41 @@ EasyPack.panel.Home = function(config) {
 														console.log(r)
 														MODx.msg.status({
 															title: _('EasyPack.createFromFolder'),
+															message: _(r.message),
+															delay: 3
+														})
+													}
+													self.refresh()
+												}, scope: true
+											}
+										}
+									})
+								},
+								install: function() {
+									var cs = this.getSelectedAsList()
+									var self = this
+									var data = this.getSelectionModel().getSelections()[0].data
+									MODx.msg.confirm({
+										title: _('create'),
+										text: _('confirm'),
+										url: easypackConnectorUrl,
+										params: {
+											action: 'mgr/install',
+											id: cs,
+										},
+										listeners: {
+											'success': {
+												fn: function(r) {
+													if(!r.success) {
+														MODx.msg.status({
+															title: _('EasyPack.install'),
+															message: 'Ошибка',
+															delay: 3
+														})
+													} else {
+														console.log(r)
+														MODx.msg.status({
+															title: _('EasyPack.install'),
 															message: _(r.message),
 															delay: 3
 														})
@@ -1860,6 +1902,13 @@ EasyPack.window.create = function(config) {
 			boxLabel: _('_model_', {name: config.updateData.name_lower}),
 			originalValue: true,
 
+		},
+		{
+			xtype: 'xcheckbox',
+			name: 'generate__admin_tab',
+			id: 'add-' + this.ident + '-generate__admin_tab',
+			boxLabel: _('_admin_tab', {name: config.updateData.name_lower}),
+			originalValue: true,
 		},
 		{
 			xtype: 'xcheckbox',

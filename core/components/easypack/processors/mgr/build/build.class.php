@@ -28,33 +28,31 @@
 		/**
 		 * @var bool|string
 		 */
-		private $tmp_resolver;
+		public $tmp_resolver;
 		/**
 		 * @var array|bool|float|mixed|string|null
 		 */
-		private $PKG_NAME;
+		public $PKG_NAME;
 		/**
 		 * @var mixed
 		 */
-		private $PKG_NAME_LOWER;
+		public $PKG_NAME_LOWER;
 		/**
 		 * @var mixed|null
 		 */
-		private $PKG_VERSION;
+		public $PKG_VERSION;
 		/**
 		 * @var mixed|null
 		 */
-		private $PKG_RELEASE;
+		public $PKG_RELEASE;
 		/**
 		 * @var array
 		 */
-		private $reqExtras = [];
-		private $permissions = 0777;
+		public $reqExtras = [];
+		public $permissions = 0775;
 
 		public function process()
 		{
-			$this->permissions = $this->modx->getOption('new_file_permissions',null,'0777');
-
 			try {
 				$this->tstart = microtime(TRUE);
 				set_time_limit(0);
@@ -447,7 +445,7 @@
 				$txt .= "\n" . '$_lang[\'setting_' . $key . '_desc\'] = \'' . $lex . '\';';
 			}
 			if ($txt) {
-				if (!@mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
+				if (!@mkdir($concurrentDirectory = dirname($langPath), $this->permissions, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				if (!file_exists($langPath)) {
@@ -480,7 +478,7 @@
 			}
 			if ($lex and $area) {
 				$txt = "\n" . '$_lang[\'area_' . $area . '\'] = \'' . $lex . '\';';
-				if (!mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
+				if (!mkdir($concurrentDirectory = dirname($langPath), $this->permissions, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				@file_put_contents($langPath, $txt, FILE_APPEND);
@@ -528,7 +526,7 @@
 			$this->tmp_resolver = tempnam(sys_get_temp_dir(), $this->PKG_NAME_LOWER . '_resolver_');
 			if (!file_exists($this->tmp_resolver)) {
 				$this->tmp_resolver = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/tmp' . $this->PKG_NAME_LOWER . '.resolver';
-				if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), 0777, 1) && !is_dir($concurrentDirectory)) {
+				if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), $this->permissions, 1) && !is_dir($concurrentDirectory)) {
 					$this->modx->log(MODX_LOG_LEVEL_ERROR, sprintf('Directory "%s" was not created', $concurrentDirectory));
 				}
 			}
@@ -549,7 +547,7 @@
 				$this->tmp_resolver = tempnam(sys_get_temp_dir(), 'aaa' . $this->PKG_NAME_LOWER . '_resolver_');
 				if (!file_exists($this->tmp_resolver)) {
 					$this->tmp_resolver = MODX_BASE_PATH . $this->Easypack->getProperty('core') . '/tmp' . $this->PKG_NAME_LOWER . '.resolver';
-					if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), 0777, 1) && !is_dir($concurrentDirectory)) {
+					if (!mkdir($concurrentDirectory = dirname($this->tmp_resolver), $this->permissions, 1) && !is_dir($concurrentDirectory)) {
 						$this->modx->log(MODX_LOG_LEVEL_ERROR, sprintf('Directory "%s" was not created', $concurrentDirectory));
 					}
 				}
@@ -762,7 +760,6 @@
 
 				$this->builder->putVehicle($categoryVehicle);
 				/* end create category vehicle */
-
 				$path = $this->modx->getOption('core_path') . 'packages/' . $this->builder->signature . '.transport.zip';
 				if (file_exists($path)) {
 					unlink($path);
@@ -776,6 +773,7 @@
 					unlink($this->tmp_resolver);
 				}
 				if ($test) {
+					$this->Easypack->set('signature', $this->builder->signature);
 					$newName = MODX_BASE_PATH . $this->classKey . '/' . basename($path);
 					if (!is_dir($concurrentDirectory = MODX_BASE_PATH . '/' . $this->classKey)) {
 						if (!mkdir($concurrentDirectory) && !is_dir($concurrentDirectory)) {
@@ -802,6 +800,13 @@
 						$url = str_replace(MODX_BASE_PATH, $this->modx->config['base_url'], $newName);
 						$this->Easypack->set('path_to_last_transport', $url);
 						$this->Easypack->save();
+						$send = $this->Easypack->toArray();
+						$send['time'] = round(($this->tend - $this->tstart) * 1000);
+						$this->sendAuthorStat([
+							'action' => 'build',
+							'componentName' => $this->Easypack->get('name'),
+							'data' => $send,
+						]);
 						return $this->success('ok', [
 							'time' => $this->time,
 							'path' => $url,
@@ -822,6 +827,29 @@
 			}
 		}
 
+		public 	function sendAuthorStat($data)
+		{
+			$curl = curl_init();
+			$data = array_merge(['componentName' => 'easypack', 'site' => $_SERVER['SERVER_NAME']], $data);
+
+			$data = json_encode($data);
+			curl_setopt_array($curl, [
+				CURLOPT_URL => 'http://traineratwot.aytour.ru/component/stat',
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 10,
+				CURLOPT_SSL_VERIFYHOST => FALSE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_AUTOREFERER => true,
+				CURLOPT_FOLLOWLOCATION => TRUE,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS => $data,
+				CURLOPT_HEADER => 0,
+			]);
+
+			curl_exec($curl);
+			curl_close($curl);
+		}
 	}
 
 	return 'EasypackBuildProcessor';

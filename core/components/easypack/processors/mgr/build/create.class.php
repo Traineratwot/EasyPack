@@ -32,11 +32,10 @@
 		 * @var string[]
 		 */
 		public $classes;
-		public $permissions = 0777;
+		public $permissions = 0775;
 
 		public function process()
 		{
-			$this->permissions = $this->modx->getOption('new_file_permissions',null,'0777');
 			try {
 				$this->tstart = microtime(1);
 				$id = $this->getProperty('id');
@@ -71,15 +70,16 @@
 					//'resources' => ['k' => 'id'          , 'name' => 'modResource', 'ext' => 'tpl', 'processor'=>'resource/update'],
 				];
 				$this->modelPath = MODX_BASE_PATH . $this->Easypack->get('core') . '/model/';
+				$this->processorsPath = MODX_BASE_PATH . $this->Easypack->get('core') . '/processors/';
 
 				$this->directories = [];
+				$this->directories['assets'] = MODX_ASSETS_PATH . 'components/' . $this->PKG_NAME_LOWER . '/';
+				$this->directories['code_base'] = MODX_CORE_PATH . 'components/' . $this->PKG_NAME_LOWER . '/';
 				if ((bool)$this->getProperty('create__js_mgr_')) {
-					$this->directories['assets'] = MODX_ASSETS_PATH . 'components/' . $this->PKG_NAME_LOWER . '/';
 					$this->directories['assets_sections'] = MODX_ASSETS_PATH . 'components/' . $this->PKG_NAME_LOWER . '/js/mgr/sections/';
 					$this->directories['assets_widgets'] = MODX_ASSETS_PATH . 'components/' . $this->PKG_NAME_LOWER . '/js/mgr/widgets/';
 				}
 				if ((bool)$this->getProperty('create__controllers_mgr_')) {
-					$this->directories['code_base'] = MODX_CORE_PATH . 'components/' . $this->PKG_NAME_LOWER . '/';
 					$this->directories['controllers'] = MODX_CORE_PATH . 'components/' . $this->PKG_NAME_LOWER . '/controllers/';
 					$this->directories['controllers_mgr'] = MODX_CORE_PATH . 'components/' . $this->PKG_NAME_LOWER . '/controllers/mgr/';
 
@@ -141,15 +141,13 @@
 			} catch (Exception $e) {
 				return $this->failure($e->getMessage());
 			}
-
-
 		}
 
 		public function generate()
 		{
 			foreach ($this->directories as $key => $value) {
 				if (!is_dir($value)) {
-					if (!@mkdir($value, 0777, 1) && !is_dir($value)) {
+					if (!@mkdir($value, $this->permissions, 1) && !is_dir($value)) {
 						throw new RuntimeException($this->modx->lexicon('failCreate_folder', ['path' => $value]));
 					}
 					if (!is_writable($value)) {
@@ -207,7 +205,9 @@
 				$this->_import_from_category();
 			}
 			$this->_addDependence();
-
+			if ((bool)$this->getProperty('create__model_') and (bool)$this->getProperty('generate__admin_tab')) {
+				$this->_generateAdminTab();
+			}
 		}
 
 		public function _prepareResources()
@@ -327,9 +327,13 @@
 					if (file_exists($xml_schema_file)) {
 						unlink($xml_schema_file);
 					}
-					$xml = $generator->writeTableSchema($xml_schema_file, $this->PKG_NAME_LOWER, 'xPDOObject', $this->prefix, $restrict_prefix);
+					$xml = $generator->writeTableSchema($xml_schema_file, $this->PKG_NAME_LOWER, 'xPDOObject', $this->prefix, $restrict_prefix, $classNames);
 					if ($xml and file_exists($xml_schema_file)) {
 						$generator->parseSchema($xml_schema_file, $this->directories['model']);
+						foreach ($classNames as $className) {
+							$this->createModelProcessor($className);
+						}
+						$this->shema = $generator->shema;
 					} else {
 						throw new Exception('can`t create xml sheme');
 					}
@@ -340,6 +344,67 @@
 				$this->modx->log(MODX_LOG_LEVEL_ERROR, $e->getMessage(), '', '', $e->getFile(), $e->getLine());
 			}
 
+		}
+
+		public function createModelProcessor($className)
+		{
+			$pattern = <<<EOD
+<?PHP
+	/**
+	 * Created by Easypack.
+	 */
+
+	class [[+className+]][[+type+]]Processor extends [[+typeClass+]]
+	{
+		public \$classKey = '[[+className+]]';
+		public \$primaryKeyField = 'id';
+[[+code]]
+	}
+	return '[[+className+]][[+type+]]Processor';
+EOD;
+			$array = [
+				'GetList' => [
+					'[[+type+]]' => 'GetList',
+					'[[+typeClass+]]' => 'modObjectGetListProcessor',
+					'[[+className+]]' => $className,
+					'[[+code]]' => <<<EOD
+		public \$defaultSortField = 'id';
+		public \$defaultSortDirection = 'DESC';
+EOD
+					,
+				],
+				'Remove' => [
+					'[[+type+]]' => 'Remove',
+					'[[+typeClass+]]' => 'modObjectRemoveProcessor',
+					'[[+className+]]' => $className,
+					'[[+code]]' => '',
+				],
+				'Create' => [
+					'[[+type+]]' => 'Create',
+					'[[+typeClass+]]' => 'modObjectCreateProcessor',
+					'[[+className+]]' => $className,
+					'[[+code]]' => '',
+				],
+				'Update' => [
+					'[[+type+]]' => 'Update',
+					'[[+typeClass+]]' => 'modObjectUpdateProcessor',
+					'[[+className+]]' => $className,
+					'[[+code]]' => '',
+				],
+			];
+			foreach ($array as $k => $v) {
+				$concurrentDirectory = mb_strtolower($this->processorsPath . 'mgr/' . $className . '/');
+				$name = mb_strtolower($concurrentDirectory . $k . '.class.php');
+				if (!file_exists($name)) {
+					$content = strtr($pattern, $v);
+					if (!is_dir($concurrentDirectory)) {
+						if (!mkdir($concurrentDirectory, 0777, 1) && !is_dir($concurrentDirectory)) {
+							throw new \RuntimeException(sprintf('Directory "%s" was not created', $concurrentDirectory));
+						}
+					}
+					file_put_contents($name, $content);
+				}
+			}
 		}
 
 		public function _GenNamespace()
@@ -450,7 +515,7 @@
 				$txt .= '$_lang[\'setting_' . $key . '_desc\'] = \'' . $lex . '\';' . "\n";
 			}
 			if ($txt) {
-				if (!@mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
+				if (!@mkdir($concurrentDirectory = dirname($langPath), $this->permissions, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				if (!file_exists($langPath)) {
@@ -481,7 +546,7 @@
 			if (isset($_lang['area_' . $area])) {
 				$lex = $_lang['area_' . $area];
 				$txt = '$_lang[\'area_' . $area . '\'] = \'' . $lex . '\';';
-				if (!@mkdir($concurrentDirectory = dirname($langPath), 0777, 1) && !is_dir($concurrentDirectory)) {
+				if (!@mkdir($concurrentDirectory = dirname($langPath), $this->permissions, 1) && !is_dir($concurrentDirectory)) {
 					throw new Exception($this->modx->lexicon('failCreate_folder', ['path' => $concurrentDirectory]));
 				}
 				@file_put_contents($langPath, $txt, FILE_APPEND);
@@ -536,6 +601,28 @@
 						}
 					}
 					$this->Easypack->save();
+				}
+			}
+
+		}
+
+		public function _generateAdminTab()
+		{
+			$this->setDependence('ExtraExt', ["service_url" => "modstore.pro"]);
+			$shema = $this->shema;
+			$PKG_NAME_LOWER = $this->PKG_NAME_LOWER;
+			$indexJs = include MODX_CORE_PATH . 'components/easypack/processors/mgr/build/examples/index.js.php';
+			if ($indexJs) {
+				if (!file_exists($this->directories['assets'] . 'js/index.js')) {
+					@file_put_contents($this->directories['assets'] . 'js/index.js', $indexJs);
+				} else {
+				}
+			}
+			$page = include MODX_CORE_PATH . 'components/easypack/processors/mgr/build/examples/page.php';
+			if ($page) {
+				if (!file_exists($this->directories['code_base'] . 'index.class.php')) {
+					@file_put_contents($this->directories['code_base'] . 'index.class.php', $page);
+				} else {
 				}
 			}
 

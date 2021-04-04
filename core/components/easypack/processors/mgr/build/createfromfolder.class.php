@@ -122,7 +122,7 @@
 		public function genElem($dirname, SplFileInfo $element)
 		{
 			if ($this->checkElem($dirname, $element)) {
-				$relativePath = str_replace(MODX_CORE_PATH, '', $element->getRealPath());
+				$relativePath = str_replace(MODX_BASE_PATH, '', $element->getRealPath());
 				switch ($dirname) {
 					case "plugins":
 						$this->genPlugins($relativePath, $element);
@@ -146,17 +146,18 @@
 			$events = $this->pluginGetEvents($content);
 			if (!empty($events)) {
 				$pluginCode =
-					<<<EOD
+					<<<PHP
 <?php
 	\$path = MODX_CORE_PATH."$relativePath";
 	if(file_exists(\$path)){
 		return include \$path;
 	}
-EOD;
+PHP;
 				$data = [
 					'name' => $element->name,
 					'plugincode' => $pluginCode,
 					'description' => 'created by EasyPack',
+					'source' => 1,
 					'events' => $events,
 				];
 				if ($this->categoryId) {
@@ -179,6 +180,7 @@ EOD;
 				'name' => $element->name,
 				'snippet' => $content,
 				'description' => 'created by EasyPack',
+				'source' => 1,
 				'static_file' => $relativePath,
 				'static' => TRUE,
 			];
@@ -201,6 +203,7 @@ EOD;
 				'name' => $element->name,
 				'snippet' => $content,
 				'description' => 'created by EasyPack',
+				'source' => 1,
 				'static_file' => $relativePath,
 				'static' => TRUE,
 			];
@@ -223,6 +226,7 @@ EOD;
 				'templatename' => $element->name,
 				'content' => $content,
 				'description' => 'created by EasyPack',
+				'source' => 1,
 				'static_file' => $relativePath,
 				'static' => TRUE,
 			];

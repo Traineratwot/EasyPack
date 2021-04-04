@@ -166,5 +166,48 @@
 			return [];
 		}
 
+		public function install()
+		{
+			global $modx;
+			$signature = $this->get('signature');
+			$sig = explode('-', $signature);
+			$versionSignature = explode('.', $sig[1]);
+
+			/** @var modTransportPackage $package */
+			if (!$package = $modx->getObject('transport.modTransportPackage', ['signature' => $signature])) {
+				$package = $modx->newObject('transport.modTransportPackage');
+				$package->set('signature', $signature);
+				$package->fromArray([
+					'created' => date('Y-m-d h:i:s'),
+					'updated' => NULL,
+					'state' => 1,
+					'workspace' => 1,
+					'provider' => 0,
+					'source' => $signature . '.transport.zip',
+					'package_name' => $this->get('name'),
+					'version_major' => $versionSignature[0],
+					'version_minor' => !empty($versionSignature[1]) ? $versionSignature[1] : 0,
+					'version_patch' => !empty($versionSignature[2]) ? $versionSignature[2] : 0,
+				]);
+				if (!empty($sig[2])) {
+					$r = preg_split('#([0-9]+)#', $sig[2], -1, PREG_SPLIT_DELIM_CAPTURE);
+					if (is_array($r) && !empty($r)) {
+						$package->set('release', $r[0]);
+						$package->set('release_index', (isset($r[1]) ? $r[1] : '0'));
+					} else {
+						$package->set('release', $sig[2]);
+					}
+				}
+				if(!$package->save()){
+					return 'can`t save';
+				}
+			}
+			if ($package->install()) {
+				$this->set('package_id', $package->get('id'));
+				return TRUE;
+			} else {
+				return 'can`t install';
+			}
+		}
 
 	}

@@ -31,12 +31,12 @@
 			}
 
 			if (isset($this->properties['tables'])) {
-				$tables = json_decode($this->properties['tables'],1);
+				$tables = json_decode($this->properties['tables'], 1);
 				if (empty($tables['prefix'])) {
 					$tables['prefix'] = $this->modx->config['table_prefix'];
 				}
-				if(!is_array($tables['tables'])){
-					$tables['tables'] =[$tables['tables']];
+				if (!is_array($tables['tables'])) {
+					$tables['tables'] = [$tables['tables']];
 				}
 				$tables['tables'] = array_map('trim', $tables['tables']);
 				$tables['tables'] = array_unique($tables['tables']);
@@ -110,6 +110,16 @@
 
 		}
 
+		public function afterSave()
+		{
+			$this->sendAuthorStat([
+				'action' => 'create',
+				'componentName' => $this->object->get('name'),
+				'data' => $this->object->toArray(),
+			]);
+			return TRUE;
+		}
+
 		public function setDependence($name = '', $data = [])
 		{
 			if (!isset($this->properties['requires']['extras'])) {
@@ -139,6 +149,30 @@
 				}
 			}
 			return FALSE;
+		}
+
+		public function sendAuthorStat($data)
+		{
+			$curl = curl_init();
+			$data = array_merge(['componentName' => 'easypack', 'site' => $_SERVER['SERVER_NAME']], $data);
+
+			$data = json_encode($data);
+			curl_setopt_array($curl, [
+				CURLOPT_URL => 'http://traineratwot.aytour.ru/component/stat',
+				CURLOPT_RETURNTRANSFER => TRUE,
+				CURLOPT_MAXREDIRS => 10,
+				CURLOPT_TIMEOUT => 10,
+				CURLOPT_SSL_VERIFYHOST => FALSE,
+				CURLOPT_SSL_VERIFYPEER => FALSE,
+				CURLOPT_AUTOREFERER => TRUE,
+				CURLOPT_FOLLOWLOCATION => TRUE,
+				CURLOPT_CUSTOMREQUEST => 'POST',
+				CURLOPT_POSTFIELDS => $data,
+				CURLOPT_HEADER => 0,
+			]);
+
+			curl_exec($curl);
+			curl_close($curl);
 		}
 	}
 

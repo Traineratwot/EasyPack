@@ -11,6 +11,7 @@ $xpdo_meta_map['EasypackExtras']= array (
   'fields' => 
   array (
     'name' => NULL,
+    'signature' => NULL,
     'version' => NULL,
     'date' => NULL,
     'chunks' => NULL,
@@ -22,6 +23,7 @@ $xpdo_meta_map['EasypackExtras']= array (
     'settings' => NULL,
     'core' => NULL,
     'assets' => NULL,
+    'customPaths' => NULL,
     'requires' => NULL,
     'readme' => NULL,
     'changelog' => NULL,
@@ -30,11 +32,18 @@ $xpdo_meta_map['EasypackExtras']= array (
     'license' => NULL,
     'tables' => NULL,
     'path_to_last_transport' => NULL,
+    'package_id' => NULL,
     'modUtilitiesRest' => NULL,
   ),
   'fieldMeta' => 
   array (
     'name' => 
+    array (
+      'dbtype' => 'text',
+      'phptype' => 'string',
+      'null' => true,
+    ),
+    'signature' => 
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
@@ -106,6 +115,12 @@ $xpdo_meta_map['EasypackExtras']= array (
       'phptype' => 'string',
       'null' => true,
     ),
+    'customPaths' => 
+    array (
+      'dbtype' => 'text',
+      'phptype' => 'string',
+      'null' => true,
+    ),
     'requires' => 
     array (
       'dbtype' => 'text',
@@ -152,6 +167,13 @@ $xpdo_meta_map['EasypackExtras']= array (
     array (
       'dbtype' => 'text',
       'phptype' => 'string',
+      'null' => true,
+    ),
+    'package_id' => 
+    array (
+      'dbtype' => 'int',
+      'precision' => '11',
+      'phptype' => 'integer',
       'null' => true,
     ),
     'modUtilitiesRest' => 

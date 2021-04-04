@@ -27,7 +27,7 @@
 
 			class my_xPDOGenerator_mysql extends xPDOGenerator_mysql
 			{
-
+				public $shema = [];
 				/**
 				 * an array of allowed tables
 				 * @var array
@@ -87,7 +87,7 @@
 				 *                                specified tablePrefix; if tablePrefix is empty, this is ignored.
 				 * @return boolean True on success, false on failure.
 				 */
-				public function writeTableSchema($schemaFile, $package = '', $baseClass = '', $tablePrefix = '', $restrictPrefix = FALSE)
+				public function writeTableSchema($schemaFile, $package = '', $baseClass = '', $tablePrefix = '', $restrictPrefix = FALSE, &$classNames)
 				{
 					global $modx;
 					if (empty ($package))
@@ -121,6 +121,8 @@
 						}
 						$class = $this->getClassName($tableName);
 						$extends = $baseClass;
+						$classNames[] = $class;
+						$this->shema[$class] = [];
 						$sql = 'SHOW COLUMNS FROM ' . $this->manager->xpdo->escape($dbname) . '.' . $this->manager->xpdo->escape($table);
 						//$this->manager->xpdo->log(xPDO::LOG_LEVEL_ERROR, 'Line: '.__LINE__.' Sql: '.$sql);
 						$fieldsStmt = $this->manager->xpdo->query($sql);
@@ -141,14 +143,22 @@
 									$dbType = $precisionPos ? substr($Type[0], 0, $precisionPos) : $Type[0];
 									$dbType = strtolower($dbType);
 									$Precision = $precisionPos ? substr($Type[0], $precisionPos + 1, strrpos($Type[0], ')') - ($precisionPos + 1)) : '';
+									$this->shema[$class]['fields'][$Field] = [
+										'key' => $Field,
+										'dbType' => $dbType,
+									];
 									if (!empty ($Precision)) {
+										$this->shema[$class]['fields'][$Field]['Precision'] = $Precision;
 										$Precision = ' precision="' . trim($Precision) . '"';
 									}
 									$attributes = '';
 									if (isset ($Type[1]) && !empty ($Type[1])) {
+										$this->shema[$class]['fields'][$Field]['attributes'] = $Type[1];
 										$attributes = ' attributes="' . trim($Type[1]) . '"';
 									}
 									$PhpType = $this->manager->xpdo->driver->getPhpType($dbType);
+									$this->shema[$class]['fields'][$Field]['PhpType'] = $PhpType;
+									$this->shema[$class]['fields'][$Field]['Null'] = (($Null === 'NO') ? FALSE : TRUE);
 									$Null = ' null="' . (($Null === 'NO') ? 'false' : 'true') . '"';
 									$Key = $this->getIndex($Key);
 									$Default = $this->getDefault($Default);
@@ -165,6 +175,8 @@
 										}
 										$Extra = ' ' . $Extra;
 									}
+									$this->shema[$class]['fields'][$Field]['Default'] = $Default;
+									$this->shema[$class]['extends'] = $extends;
 									$xmlFields[] = "\t\t<field key=\"{$Field}\" dbtype=\"{$dbType}\"{$Precision}{$attributes} phptype=\"{$PhpType}\"{$Null}{$Default}{$Key}{$Extra} />";
 								}
 							} else {
@@ -195,6 +207,7 @@
 											$unique = empty($column['Non_unique']) ? 'true' : 'false';
 											$packed = empty($column['Packed']) ? 'false' : 'true';
 											$type = $column['Index_type'];
+											$this->shema[$class]['fields'][$column['Column_name']]['primary'] = $primary;
 										}
 										$null = $column['Null'] == 'YES' ? 'true' : 'false';
 										$xmlIndexCols[] = "\t\t\t<column key=\"{$column['Column_name']}\" length=\"{$column['Sub_part']}\" collation=\"{$column['Collation']}\" null=\"{$null}\" />";
@@ -223,7 +236,7 @@
 						$this->manager->xpdo->log(xPDO::LOG_LEVEL_DEBUG, implode("\n", $xmlContent));
 					}
 					file_put_contents($schemaFile, implode("\n", $xmlContent));
-					return TRUE;
+					return $class;
 				}
 
 				public function getClassTemplate()
@@ -239,6 +252,7 @@ class [+class+] extends [+extends+] {
 			\$v = @json_encode(\$v, 256);
 		}
 		parent::set(\$k, \$v, \$vType);
+		\$gets[\$k] = \$v;
 	}
 	public function get(\$name, \$format = NULL, \$formatTemplate = NULL, \$hard = TRUE)
 		{

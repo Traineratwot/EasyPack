@@ -1,91 +1,89 @@
 <?php
-	/**
-	 * Russian Lexicon Entries for EasyPack
-	 *
-	 * @package    EasyPack
-	 * @subpackage lexicon
-	 */
-	$_lang['EasyPack']                              = 'Упаковщик <i class="fad fa-box"></i>';
-	$_lang['easypack_title']                        = 'Упаковщик';
-	$_lang['easypack']                              = 'Упаковщик <i class="fad fa-box"></i>';
-	$_lang['EasyPack.build']                        = 'Создать пакет';
-	$_lang['EasyPack.requires']                     = 'Зависимости';
-	$_lang['EasyPack.description.requires']         = 'Зависимости в формате json';
-	$_lang['EasyPack.tables']                       = 'Таблицы';
-	$_lang['EasyPack.prefix']                       = 'Префикс таблицы';
-	$_lang['EasyPack.setup_option']                 = 'путь к файлу setup_option';
-	$_lang['EasyPack.php_resolver']                 = 'путь к файлу php_resolver';
-	$_lang['EasyPack.create']                       = 'Создать';
-	$_lang['EasyPack.create_structure']             = 'Создать структуру';
-	$_lang['EasyPack.Select_All']                   = 'Выбрать все ';
-	$_lang['EasyPack.Deselect_All']                 = 'Отменить все';
-	$_lang['EasyPack.changelog']                    = 'История изменений';
-	$_lang['EasyPack.create_new_package']           = 'Создать новы пакет';
-	$_lang['EasyPack.Packages']                     = 'Пакеты';
-	$_lang['EasyPack.Package']                      = 'Пакет';
-	$_lang['EasyPack.select']                       = 'Выбрать';
-	$_lang['EasyPack.create_new_pack']              = 'Создать новый пакет';
-	$_lang['EasyPack.license']                      = 'Лицензия';
-	$_lang['EasyPack.readme']                       = 'Readme';
-	$_lang['EasyPack.path_to_last_transport']       = 'Ссылка на последний пакет';
-	$_lang['EasyPack.test']                         = 'Тестировать пакет';
-	$_lang['EasyPack.testing']                      = 'Результат тестирование [[+name]]';
-	$_lang['EasyPack.getResolver']                  = 'Получить подготовленный resolver';
-	$_lang['EasyPack.dependence']                   = 'Зависимости от компонентов';
-
-	$_lang['_js_mgr_']                              = 'Создать папку <strong style="color: black;">/js/mgr </strong> в assets/components/[[+name]]/?';
-	$_lang['_controllers_mgr_']                     = 'Создать папку <strong style="color: black;">/controllers/mgr </strong> в core/components/[[+name]]/?';
-	$_lang['_docs_']                                = 'Создать папку <strong style="color: black;">/docs/ </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_chunks_']                     = 'Создать папку <strong style="color: black;">/elements/chunks </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_plugins_']                    = 'Создать папку <strong style="color: black;">/elements/plugins </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_snippets_']                   = 'Создать папку <strong style="color: black;">/elements/snippets </strong> в core/components/[[+name]]/?';
-	$_lang['_elements_templates_']                  = 'Создать папку <strong style="color: black;">/elements/templates </strong> в core/components/[[+name]]/?';
-	$_lang['_lexicon_en_']                          = 'Создать папку <strong style="color: black;">/lexicon/en </strong> в assets/components/[[+name]]/?';
-	$_lang['_processors_']                          = 'Создать папку <strong style="color: black;">/processors/</strong> в assets/components/[[+name]]/?';
-	$_lang['_model_']                               = 'Создать xml схемы таблиц и их классы? (автоматически запускается при создании пакета)';
-	$_lang['_namespace_']                           = 'Создать пространство имён для <strong style="color: black;">[[+name]]</strong>? (автоматически запускается при создании пакета)';
-	$_lang['import_from_category']                  = 'Импортировать Чанки, Снипеты, Плагины из категории <strong style="color: black;">[[+name]]</strong>?';
-	$_lang['_elements_']                            = 'Сохранить элементы(плагины, чанки, снипеты,...) в папку <strong style="color: black;">/elements/</strong> в core/components/[[+name]]/? (автоматически запускается при создании пакета)';
-	$_lang['add_dependence_modutil']                = 'Добавить зависимость от <strong style="color: black;">modUtilities</strong>';
-	$_lang['add_dependence_extraExt']               = 'Добавить зависимость от <strong style="color: black;">ExtraExt</strong>';
-
-
-	$_lang['EasyPack.description.date']             = 'Время последнего обновления';
-	$_lang['EasyPack.description.php_resolver']     = 'Путь к php файлу который будет выполнен после установки компонента';
-	$_lang['EasyPack.description.license']          = 'Путь к файлу лицензии, можете использовать одну и туже лицензию для всех своих компонентов ';
-	$_lang['EasyPack.description.setup_option']     = 'Путь к php файлу который будет выполнен до установки компонента';
-	$_lang['EasyPack.description.tables']           = 'Массив таблиц вашего компонента, база данных стандартная';
-	$_lang['EasyPack.description.changelog']        = 'Путь к файлу истории изменений(changelog)';
-	$_lang['EasyPack.description.readme']           = 'Путь к файлу Readme';
-	$_lang['EasyPack.description.customPaths']      = 'пути к другим файлам ';
-
-	$_lang['EasyPack.description.chunks']           = 'Массив чанков';
-	$_lang['EasyPack.description.snippets']         = 'Массив снипетов';
-	$_lang['EasyPack.description.plugins']          = 'Массив плагинов';
-	$_lang['EasyPack.description.templates']        = 'Массив шаблонов';
-	$_lang['EasyPack.description.menus']            = 'Массив пунктов меню';
-	$_lang['EasyPack.description.settings']         = 'Массив настроек';
-	$_lang['EasyPack.description.version']          = 'версия в формате: 0.0.0-pl';
-	$_lang['EasyPack.description.dependence']       = 'Зависимости от других компонентов с версией не раньше текущей(если вы внесете изменения в ручную они не затруться)';
-
-	$_lang['EasyPack.core']                         = 'Путь к core';
-	$_lang['EasyPack.customPaths']                  = 'Другие файлы';
-	$_lang['EasyPack.description.core']             = 'Путь к core от MODX_BASE_PATH, если пути стандартны оставьте пустым';
-	$_lang['EasyPack.assets']                       = 'Путь к assets';
-	$_lang['EasyPack.description.assets']           = 'Путь к assets от MODX_BASE_PATH, если пути стандартны оставьте пустым';
-
-	$_lang['EasyPack.compare.notEq']                = '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">!=</span> <span class="two">[[+two]]</span>';
-	$_lang['EasyPack.compare.h']                    = '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">< </span> <span class="two">[[+two]]</span>';
-	$_lang['EasyPack.compare.l']                    = '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">> </span> <span class="two">[[+two]]</span>';
-	$_lang['EasyPack.compare.Eq']                   = '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">==</span> <span class="two">[[+two]]</span>';
-
-	$_lang['core_no_created']                       = 'Папка core не существует <strong>"[[+path]]"</strong>';
-	$_lang['no_writable']                           = 'Папка существует, но не доступна для записи <strong>"[[+path]]"</strong>';
-	$_lang['core_no_define']                        = 'Папка core не указанна';
-	$_lang['failCreate_folder']                     = 'Не удалось создать папку <strong>"[[+path]]"</strong>';
-	$_lang['EasyPack.target1']                      = 'константа пути';
-	$_lang['EasyPack.target2']                      = 'путь';
-
-	$_lang['EasyPack.modUtilitiesRest']             = 'Rest (modUtilities)';
-	$_lang['EasyPack.createFromFolder']             = 'Создать из файлов';
-	$_lang['EasyPack.description.modUtilitiesRest'] = 'выберите rest`s для импорта, компонент modUtilities автоматически добавиться в зависимость ';
+	# generated by EasyPack
+	/** @var array $_lang */
+	$_lang = array_merge(
+		array (
+  'EasyPack' => 'Упаковщик <i class="fad fa-box"></i>',
+  'EasyPack.Deselect_All' => 'Отменить все',
+  'EasyPack.Package' => 'Пакет',
+  'EasyPack.Packages' => 'Пакеты',
+  'EasyPack.Select_All' => 'Выбрать все ',
+  'EasyPack.assets' => 'Путь к assets',
+  'EasyPack.build' => 'Создать пакет',
+  'EasyPack.changelog' => 'История изменений',
+  'EasyPack.compare.Eq' => '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">==</span> <span class="two">[[+two]]</span>',
+  'EasyPack.compare.h' => '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">< </span> <span class="two">[[+two]]</span>',
+  'EasyPack.compare.l' => '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">> </span> <span class="two">[[+two]]</span>',
+  'EasyPack.compare.notEq' => '<span class="one">[[+one]]</span> <span class="sign" style="font-family: \'Fira Code\'">!=</span> <span class="two">[[+two]]</span>',
+  'EasyPack.core' => 'Путь к core',
+  'EasyPack.create' => 'Создать',
+  'EasyPack.createFromFolder' => 'Создать из файлов',
+  'EasyPack.createLang' => 'Создать язык',
+  'EasyPack.createString' => 'Создать строку',
+  'EasyPack.createTopic' => 'Создать словарь',
+  'EasyPack.create_new_pack' => 'Создать новый пакет',
+  'EasyPack.create_new_package' => 'Создать новы пакет',
+  'EasyPack.create_structure' => 'Создать структуру',
+  'EasyPack.customPaths' => 'Другие файлы',
+  'EasyPack.dependence' => 'Зависимости от компонентов',
+  'EasyPack.description.assets' => 'Путь к assets от MODX_BASE_PATH, если пути стандартны оставьте пустым',
+  'EasyPack.description.changelog' => 'Путь к файлу истории изменений(changelog)',
+  'EasyPack.description.chunks' => 'Массив чанков',
+  'EasyPack.description.core' => 'Путь к core от MODX_BASE_PATH, если пути стандартны оставьте пустым',
+  'EasyPack.description.customPaths' => 'пути к другим файлам ',
+  'EasyPack.description.date' => 'Время последнего обновления',
+  'EasyPack.description.dependence' => 'Зависимости от других компонентов с версией не раньше текущей(если вы внесете изменения в ручную они не затруться)',
+  'EasyPack.description.license' => 'Путь к файлу лицензии, можете использовать одну и туже лицензию для всех своих компонентов ',
+  'EasyPack.description.menus' => 'Массив пунктов меню',
+  'EasyPack.description.modUtilitiesRest' => 'выберите rest`s для импорта, компонент modUtilities автоматически добавиться в зависимость ',
+  'EasyPack.description.php_resolver' => 'Путь к php файлу который будет выполнен после установки компонента',
+  'EasyPack.description.plugins' => 'Массив плагинов',
+  'EasyPack.description.readme' => 'Путь к файлу Readme',
+  'EasyPack.description.requires' => 'Зависимости в формате json',
+  'EasyPack.description.settings' => 'Массив настроек',
+  'EasyPack.description.setup_option' => 'Путь к php файлу который будет выполнен до установки компонента',
+  'EasyPack.description.snippets' => 'Массив снипетов',
+  'EasyPack.description.tables' => 'Массив таблиц вашего компонента, база данных стандартная',
+  'EasyPack.description.templates' => 'Массив шаблонов',
+  'EasyPack.description.version' => 'версия в формате: 0.0.0-pl',
+  'EasyPack.getResolver' => 'Получить подготовленный resolver',
+  'EasyPack.install' => 'Установить',
+  'EasyPack.license' => 'Лицензия',
+  'EasyPack.modUtilitiesRest' => 'Rest (modUtilities)',
+  'EasyPack.path_to_last_transport' => 'Ссылка на последний пакет',
+  'EasyPack.php_resolver' => 'путь к файлу php_resolver',
+  'EasyPack.prefix' => 'Префикс таблицы',
+  'EasyPack.readme' => 'Readme',
+  'EasyPack.requires' => 'Зависимости',
+  'EasyPack.select' => 'Выбрать',
+  'EasyPack.setup_option' => 'путь к файлу setup_option',
+  'EasyPack.tables' => 'Таблицы',
+  'EasyPack.target1' => 'константа пути',
+  'EasyPack.target2' => 'путь',
+  'EasyPack.test' => 'Тестировать пакет',
+  'EasyPack.testing' => 'Результат тестирование [[+name]]',
+  '_admin_tab' => 'Создать панель в админке',
+  '_controllers_mgr_' => 'Создать папку <strong style="color: black;">/controllers/mgr </strong> в core/components/[[+name]]/?',
+  '_docs_' => 'Создать папку <strong style="color: black;">/docs/ </strong> в core/components/[[+name]]/?',
+  '_elements_' => 'Сохранить элементы(плагины, чанки, снипеты,...) в папку <strong style="color: black;">/elements/</strong> в core/components/[[+name]]/? (автоматически запускается при создании пакета)',
+  '_elements_chunks_' => 'Создать папку <strong style="color: black;">/elements/chunks </strong> в core/components/[[+name]]/?',
+  '_elements_plugins_' => 'Создать папку <strong style="color: black;">/elements/plugins </strong> в core/components/[[+name]]/?',
+  '_elements_snippets_' => 'Создать папку <strong style="color: black;">/elements/snippets </strong> в core/components/[[+name]]/?',
+  '_elements_templates_' => 'Создать папку <strong style="color: black;">/elements/templates </strong> в core/components/[[+name]]/?',
+  '_js_mgr_' => 'Создать папку <strong style="color: black;">/js/mgr </strong> в assets/components/[[+name]]/?',
+  '_lexicon_en_' => 'Создать папку <strong style="color: black;">/lexicon/en </strong> в assets/components/[[+name]]/?',
+  '_model_' => 'Создать xml схемы таблиц и их классы? (автоматически запускается при создании пакета)',
+  '_namespace_' => 'Создать пространство имён для <strong style="color: black;">[[+name]]</strong>? (автоматически запускается при создании пакета)',
+  '_processors_' => 'Создать папку <strong style="color: black;">/processors/</strong> в assets/components/[[+name]]/?',
+  'add_dependence_extraExt' => 'Добавить зависимость от <strong style="color: black;">ExtraExt</strong>',
+  'add_dependence_modutil' => 'Добавить зависимость от <strong style="color: black;">modUtilities</strong>',
+  'core_no_created' => 'Папка core не существует <strong>"[[+path]]"</strong>',
+  'core_no_define' => 'Папка core не указанна',
+  'easypack' => 'Упаковщик <i class="fad fa-box"></i>',
+  'easypack_title' => 'Упаковщик',
+  'failCreate_folder' => 'Не удалось создать папку <strong>"[[+path]]"</strong>',
+  'import_from_category' => 'Импортировать Чанки, Снипеты, Плагины из категории <strong style="color: black;">[[+name]]</strong>?',
+  'no_writable' => 'Папка существует, но не доступна для записи <strong>"[[+path]]"</strong>',
+)
+		, $_lang);
+	
