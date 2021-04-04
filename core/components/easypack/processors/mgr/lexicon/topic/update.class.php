@@ -10,6 +10,16 @@
 
 		public function process()
 		{
+			$response = $this->update();
+			$c = $this->modx->getCacheManager();
+			$c->refresh([
+				'lexicon_topics' => array(),
+			]);
+			return $response;
+		}
+
+		public function update()
+		{
 			$id = $this->getProperty('extras', $this->modx->getOption('easypack_lex_extras', $_COOKIE, NULL));
 			$lang = $this->getProperty('lang', $this->modx->getOption('easypack_lex_lang', $_COOKIE, NULL));
 			$topic = $this->getProperty('topic', $this->modx->getOption('easypack_lex_topic', $_COOKIE, NULL));

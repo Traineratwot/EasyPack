@@ -209,6 +209,8 @@
 				$this->_generateAdminTab();
 			}
 			$this->Easypack->save();
+			$c = $this->modx->getCacheManager();
+			$c->refresh();
 		}
 
 		public function _prepareResources()
@@ -627,7 +629,15 @@ EOD
 				} else {
 				}
 			}
-
+			$menu = $this->modx->newObject('modMenu');
+			$menu->set('text', $this->PKG_NAME);
+			$menu->set('action', 'index');
+			$menu->set('namespace', $PKG_NAME_LOWER);
+			$menu->set('parent', 'components');
+			$menu->save();
+			$menus = json_decode($this->Easypack->get('menus'), 1);
+			$menus[] = $this->PKG_NAME;
+			$this->Easypack->set('menus', $menus);
 		}
 
 	}
